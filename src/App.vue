@@ -4,6 +4,7 @@ import Footer from '@/components/Footer.vue'
 
 <template>
 <div>
+  <router-view></router-view>
   <Footer/>
 </div>
 </template>
