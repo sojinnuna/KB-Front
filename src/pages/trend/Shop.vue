@@ -4,12 +4,14 @@ import Trend from "@/pages/trend/Trend.vue";
 </script>
 
 <template>
-  <div>
-    <br>
+  <div class="bc">
     <Trend></Trend>
   </div>
 </template>
 
 <style scoped>
-
+.bc{
+  background-color: #EEF4F9;
+  height: 100vh;
+}
 </style>

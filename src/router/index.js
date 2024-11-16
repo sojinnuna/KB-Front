@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Trend from "@/pages/trend/Trend.vue";
 import Shop from "@/pages/trend/Shop.vue";
 import Loading from "@/pages/product/Loading.vue";
+import MatchingProducts from "@/pages/product/MatchingProducts.vue";
 
 
 const router = createRouter({
@@ -22,6 +23,9 @@ const router = createRouter({
       name: 'loading',
       component: Loading
     },
+    { path: '/matchingProducts',
+      name: 'matchingProducts',
+      component: MatchingProducts },
   ],
 })
 
