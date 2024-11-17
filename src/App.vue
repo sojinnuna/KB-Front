@@ -1,12 +1,15 @@
 <template>
   <div class="app-container">
+
     <Header />
+
     <div class="content">
       <router-view />
     </div>
     <Footer />
   </div>
 </template>
+
 
 <script>
 import Footer from './components/Footer.vue';
@@ -58,3 +61,4 @@ footer {
   box-sizing: border-box;
 }
 </style>
+
