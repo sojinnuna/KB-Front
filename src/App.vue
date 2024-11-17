@@ -32,6 +32,7 @@ export default {
   flex-direction: column;
   position: relative;
   box-sizing: border-box;
+  background-color: rgba(238, 244, 249, 1);
 }
 
 /* 헤더 고정 */
