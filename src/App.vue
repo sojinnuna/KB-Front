@@ -1,32 +1,21 @@
 <template>
-
-  <div class="bc">
-    <router-view></router-view>
-    <Footer/>
-  </div>
-</template>
-
-<style scoped>
-.bc{
-  background-color: #EEF4F9;
-  height: 100%;
-
   <div class="app-container">
+    <Header />
     <div class="content">
       <router-view />
-      <!-- 현재 라우트에 따라 화면을 표시 -->
     </div>
     <Footer />
-    <!-- 하단 메뉴바 -->
   </div>
 </template>
 
 <script>
 import Footer from './components/Footer.vue';
+import Header from './components/Header.vue';
 
 export default {
   components: {
     Footer,
+    Header
   },
 };
 </script>
@@ -34,17 +23,38 @@ export default {
 <style scoped>
 .app-container {
   width: 360px;
-  height: 800px;
+  height: 100vh; /* 화면 전체를 채움 */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  border: 1px solid #ccc;
-  overflow: hidden;
+  position: relative;
   box-sizing: border-box;
 }
 
+/* 헤더 고정 */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* 헤더가 콘텐츠 위에 오도록 설정 */
+}
+
+/* 푸터 고정 */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* 푸터가 콘텐츠 위에 오도록 설정 */
+}
+
+/* 콘텐츠 영역 */
 .content {
   flex: 1;
-  overflow-y: auto; /* 콘텐츠가 푸터에 겹치지 않도록 스크롤 가능 */
+  margin-top: 60px; /* 헤더 높이 만큼 여백 */
+  margin-bottom: 110px; /* 푸터 높이 만큼 여백 */
+  overflow-y: auto; /* 스크롤 가능 */
+  box-sizing: border-box;
 }
 </style>

@@ -5,7 +5,7 @@
       <span>전체계좌</span>
     </router-link>
     <router-link
-      to="/myassets"
+      to="/trend"
       class="nav-item my-assets"
       exact-active-class="active"
     >
@@ -62,19 +62,16 @@ span {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  height: 110px;
   padding: 20px;
   background-color: white;
   box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
   position: fixed;
   bottom: 0;
   max-width: 360px;
-  width: 100%;
-  max-width: 720px;
   margin: 0 auto;
   gap: 0;
-
   z-index: 999;
-
 }
 
 .navbar .nav-item {
@@ -90,6 +87,7 @@ span {
 .navbar .nav-item i {
   font-size: 24px;
   margin-bottom: 15px;
+  padding: 5px;
   transition: background-color 0.3s, border-radius 0.3s;
 }
 

@@ -1,21 +1,11 @@
-
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
+import UIUX from '@/pages/UiUx.vue';
 import Trend from "@/pages/trend/Trend.vue";
 import Shop from "@/pages/trend/Shop.vue";
 import Loading from "@/pages/product/Loading.vue";
 import MatchingProducts from "@/pages/product/MatchingProducts.vue";
 
-import { createRouter, createWebHistory } from 'vue-router';
-import UIUX from '@/pages/UiUx.vue';
 
-const routes = [
-  {
-    path: '/uiux',
-    name: 'UiUx',
-    component: UIUX,
-  },
-  // 다른 경로를 추가할 수 있습니다.
-];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,14 +28,17 @@ const router = createRouter({
     },
     { path: '/matchingProducts',
       name: 'matchingProducts',
-      component: MatchingProducts },
+      component: MatchingProducts
+    },
+    {
+      path: '/uiux',
+      name: 'UiUx',
+      component: UIUX,
+    },
   ],
+
 })
 
-export default router
-
-  routes,
-});
 
 export default router;
 

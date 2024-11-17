@@ -5,16 +5,16 @@ import { DotLottieVue } from '@lottiefiles/dotlottie-vue';
 import router from "@/router/index.js";
 
 const route = useRoute();
-const group = route.query.group || '기본 그룹'; // 쿼리에서 group을 가져오거나 기본값 설정
+const group = route.query.group || '기본 그룹';
 const keyword = route.query.keyword || '';
 
-// 현재 월/일 저장 (11월 16일 형식)
+
 const currentDate = new Date().toLocaleDateString('ko-KR', {
   month: 'long',
   day: 'numeric',
 });
 
-// group에 따라 Lottie 파일 경로를 결정
+
 const lottieSrc = computed(() => {
   const lottieMap = {
     여행: 'https://lottie.host/50ce27de-a1d1-4762-83ae-40ac86cde669/5heNlNsdgg.lottie',
@@ -45,7 +45,7 @@ setTimeout(() => {
       <h5>지금 인기있는 [ <b>{{ group }}</b> ]</h5>
       <h5>관련 상품을 찾는 중이에요!</h5>
       <div class="lottie">
-        <DotLottieVue :src="lottieSrc" style="width: 100%; height: 100%; max-height: 280px; max-width: 280px" autoplay loop />
+        <DotLottieVue :src="lottieSrc" style="width: 100%; height: 100%; max-height: 260px; max-width: 260px" autoplay loop />
       </div>
     </div>
   </div>
@@ -56,7 +56,7 @@ setTimeout(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* 화면 높이의 100% 사용 */
+  height: 100%;
 }
 
 .loading {
@@ -66,8 +66,8 @@ setTimeout(() => {
   align-items: center; /* 수평 가운데 정렬 */
   width: 100%;
   height: 100%;
-  max-width: 350px;
-  max-height: 350px;
+  max-width: 330px;
+  max-height: 330px;
   background-color: #FFCC00;
   border-radius: 50%;
   text-align: center;

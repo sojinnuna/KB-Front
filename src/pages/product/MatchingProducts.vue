@@ -24,7 +24,7 @@ const fetchProducts = async () => {
 
   try {
     const response = await axios.get(`/api/matchingProducts`, {
-      params: { group, keyword }, // group과 keyword를 서버로 전달
+      params: { group, keyword }, // group과 keyword를 서버로 전달a
     });
 
     // 서버에서 두 리스트를 분리하여 응답
@@ -53,14 +53,13 @@ onMounted(() => {
 
 <template>
   <div class="container">
-    <br>
     <div v-if="loading" class="loading">Loading...</div>
     <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
 
     <!-- keyword와 정확히 일치하는 상품을 Swiper로 나열 -->
     <div>
       <div class="trend">
-        <h5><b>트렌드인 {{ keyword }} 맞춤상품</b></h5>
+        <h5>트렌드인 <b> {{ keyword }} </b> 맞춤상품</h5>
       </div>
       <swiper
           v-if="keywordProducts.length"
