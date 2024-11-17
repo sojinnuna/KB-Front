@@ -4,7 +4,7 @@
     <div class="left-container">
       <button class="toggle-btn">간편홈</button>
       <label class="switch">
-        <input type="checkbox" />
+        <input type="checkbox" @change="navigatePage" />
         <span class="slider"></span>
       </label>
     </div>
@@ -22,6 +22,17 @@
 <script>
 export default {
   name: 'Header',
+  methods: {
+    navigatePage(event) {
+      if (event.target.checked) {
+        // 체크 상태일 때 /uiux로 이동
+        this.$router.push('/uiux');
+      } else {
+        // 체크 해제 상태일 때 기본 화면으로 이동
+        this.$router.push('/');
+      }
+    },
+  },
 };
 </script>
 
@@ -33,26 +44,26 @@ export default {
   align-items: center;
   padding: 10px 20px;
   position: fixed;
-  top: 0%; /* 화면 세로 중간 */
-  left: 50%; /* 화면 가로 중간 */
-  transform: translateX(-50%); /* 정확히 중앙 정렬 */
+  top: 0%;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 999;
-  width: 360px; /* 가로 크기 */
-  white-space: nowrap; /* 텍스트가 다음 줄로 넘어가지 않도록 설정 */
+  width: 360px;
+  white-space: nowrap;
 }
 
 /* 왼쪽 정렬 */
 .left-container {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* 왼쪽 정렬 */
-  flex-grow: 1; /* 왼쪽 요소가 남은 공간을 차지하게 함 */
+  justify-content: flex-start;
+  flex-grow: 1;
   margin-left: -15px;
 }
 
 /* 토글 버튼 */
 .toggle-btn {
-  background-color: transparent; /* 배경색 제거 */
+  background-color: transparent;
   color: #333;
   padding: 10px 3px;
   border: none;
@@ -111,14 +122,14 @@ input:checked + .slider:before {
 /* 오른쪽 정렬 */
 .right-container {
   display: flex;
-  justify-content: flex-end; /* 오른쪽 정렬 */
-  flex-grow: 0; /* 오른쪽 요소가 남은 공간을 차지하게 함 */
+  justify-content: flex-end;
+  flex-grow: 0;
 }
 
 /* 버튼 스타일 */
 .header-btn {
-  background-color: transparent; /* 배경색 제거 */
-  color: #333; /* 텍스트 색 */
+  background-color: transparent;
+  color: #333;
   padding: 8px 12px;
   border: none;
   border-radius: 20px;

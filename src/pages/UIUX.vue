@@ -1,6 +1,6 @@
 <template>
   <div class="main-page">
-    <Header />
+    <!-- <Header /> -->
     <!-- + 버튼 클릭 시 바텀 시트 표시, 바텀 시트 열리면 + 버튼 숨김 -->
     <div
       v-if="!isBottomSheetVisible"
@@ -188,7 +188,7 @@ export default {
 
 .plus-box {
   position: fixed;
-  bottom: 110px;
+  bottom: 120px;
   left: 50%;
   transform: translateX(-50%);
   width: 200px;

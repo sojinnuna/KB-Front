@@ -1,34 +1,39 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import UIUX from '@/pages/UiUx.vue';
-import Trend from "@/pages/trend/Trend.vue";
-import Shop from "@/pages/trend/Shop.vue";
-import Loading from "@/pages/product/Loading.vue";
-import MatchingProducts from "@/pages/product/MatchingProducts.vue";
-
-
+import UIUX from '@/pages/UIUX.vue';
+import Trend from '@/pages/trend/Trend.vue';
+import Shop from '@/pages/trend/Shop.vue';
+import Loading from '@/pages/product/Loading.vue';
+import MatchingProducts from '@/pages/product/MatchingProducts.vue';
+import UIUXPage from '@/pages/UIUX.vue'; // UI/UX 페이지 컴포넌트
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
 
   routes: [
     {
+      path: '/uiux',
+      name: 'UIUX',
+      component: UIUX,
+    },
+    {
       path: '/trend',
       name: 'trend',
-      component: Trend
+      component: Trend,
     },
     {
       path: '/shop',
       name: 'shop',
-      component: Shop
+      component: Shop,
     },
     {
       path: '/loading',
       name: 'loading',
-      component: Loading
+      component: Loading,
     },
-    { path: '/matchingProducts',
+    {
+      path: '/matchingProducts',
       name: 'matchingProducts',
-      component: MatchingProducts
+      component: MatchingProducts,
     },
     {
       path: '/uiux',
@@ -36,9 +41,6 @@ const router = createRouter({
       component: UIUX,
     },
   ],
-
-})
-
+});
 
 export default router;
-
