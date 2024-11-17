@@ -97,7 +97,7 @@ onMounted(() => {
 <style scoped>
 .contentBox{
   background-color: white;
-  height: 16vh;
+  height: 14vh;
 }
 
 .loading {
