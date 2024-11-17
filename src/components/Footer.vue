@@ -33,12 +33,6 @@
             <span>마이페이지</span>
           </router-link>
         </li>
-        <li class="nav-item item-margin last-item">
-          <router-link to="/trend" class="nav-link text-body-secondary d-flex flex-column align-items-center">
-            <i class="fa-solid fa-user icon-large"></i>
-            <span>Trend</span>
-          </router-link>
-        </li>
       </ul>
     </footer>
   </div>
@@ -55,7 +49,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  max-width: 1200px;
+  max-width: 720px;
   margin: 0 auto;
   gap: 0;
 }

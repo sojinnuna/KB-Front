@@ -1,17 +1,17 @@
 <script setup>
-import Footer from '@/components/Footer.vue'
+
+import Trend from "@/pages/trend/Trend.vue";
 </script>
 
 <template>
   <div class="bc">
-    <router-view></router-view>
-    <Footer/>
+    <Trend></Trend>
   </div>
 </template>
 
 <style scoped>
 .bc{
   background-color: #EEF4F9;
-  height: 100%;
+  height: 100vh;
 }
 </style>
