@@ -1,17 +1,6 @@
 <template>
-
-  <div class="bc">
-    <router-view></router-view>
-    <Footer/>
-  </div>
-</template>
-
-<style scoped>
-.bc{
-  background-color: #EEF4F9;
-  height: 100%;
-
   <div class="app-container">
+    <Header/>
     <div class="content">
       <router-view />
       <!-- 현재 라우트에 따라 화면을 표시 -->
@@ -21,12 +10,15 @@
   </div>
 </template>
 
+
 <script>
 import Footer from './components/Footer.vue';
+import Header from './components/Header.vue';
 
 export default {
   components: {
     Footer,
+    Header
   },
 };
 </script>
@@ -48,3 +40,4 @@ export default {
   overflow-y: auto; /* 콘텐츠가 푸터에 겹치지 않도록 스크롤 가능 */
 }
 </style>
+

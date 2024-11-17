@@ -5,7 +5,7 @@
       <span>전체계좌</span>
     </router-link>
     <router-link
-      to="/myassets"
+      to="/trend"
       class="nav-item my-assets"
       exact-active-class="active"
     >
