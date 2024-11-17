@@ -109,12 +109,12 @@ onMounted(() => {
   color: red;
 }
 .trendBox {
-  font-size: 12px;
+  font-size: 14px;
   border-radius: 20px;
   width: 100%;
   height: 100%;
-  max-width: 350px;
-  max-height: 75px;
+  max-width: 340px;
+  max-height: 85px;
   background-color: #EFEFF1;
   margin: 0 auto;
 }
