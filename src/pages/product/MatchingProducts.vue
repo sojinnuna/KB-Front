@@ -44,7 +44,7 @@ const fetchProducts = async () => {
     );
   } catch (error) {
     console.error('Failed to fetch matching products:', error);
-    errorMessage.value = '상품 데이터를 가져오는 중 오류가 발생했습니다.';
+    errorMessage.value = '상품 데이터를 가져오는 오류가 발생했습니다.';
   } finally {
     loading.value = false;
   }
