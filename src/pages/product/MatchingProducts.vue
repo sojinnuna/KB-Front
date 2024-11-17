@@ -24,19 +24,32 @@ const fetchProducts = async () => {
 
   try {
     const response = await axios.get(`/api/matchingProducts`, {
-      params: { group, keyword }, // group과 keyword를 서버로 전달a
+      params: { group, keyword }, // group과 keyword를 서버로 전달
     });
 
     // 서버에서 두 리스트를 분리하여 응답
-    groupProducts.value = response.data.groupProducts;
     keywordProducts.value = response.data.keywordProducts;
+    groupProducts.value = response.data.groupProducts;
+
+    // keywordProducts에 있는 상품은 groupProducts에서 제거 (productCode가 중복되는 상품 제거)
+    groupProducts.value = groupProducts.value.filter(
+        (groupProduct) =>
+            !keywordProducts.value.some(
+                (keywordProduct) => keywordProduct.productCode === groupProduct.productCode
+            )
+    );
+    groupProducts.value = groupProducts.value.filter(
+        (value, index, self) =>
+            index === self.findIndex((t) => t.productId === value.productId)
+    );
   } catch (error) {
     console.error('Failed to fetch matching products:', error);
-    errorMessage.value = '상품 데이터를 가져오는 중 오류가 발생했습니다.';
+    errorMessage.value = '상품 데이터를 가져오는 오류가 발생했습니다.';
   } finally {
     loading.value = false;
   }
 };
+
 
 // 상품 클릭 시 URL로 이동
 const navigateToProduct = (url) => {
@@ -53,7 +66,11 @@ onMounted(() => {
 
 <template>
   <div class="container">
-    <div v-if="loading" class="loading">Loading...</div>
+    <div v-if="loading" class="loading text-center">
+      <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
     <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
 
     <!-- keyword와 정확히 일치하는 상품을 Swiper로 나열 -->
@@ -119,11 +136,10 @@ onMounted(() => {
 }
 
 .loading {
-  text-align: center;
-  font-size: 18px;
-  color: #007bff;
+  color: #FFCC00;
+  font-weight: bold;
+  margin: 20px 0;
 }
-
 .error {
   text-align: center;
   color: red;
@@ -195,6 +211,4 @@ h6 {
   margin-right: -10px;
   margin-top: -5px;
 }
-
-
 </style>
