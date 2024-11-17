@@ -1,4 +1,16 @@
 <template>
+
+  <div class="bc">
+    <router-view></router-view>
+    <Footer/>
+  </div>
+</template>
+
+<style scoped>
+.bc{
+  background-color: #EEF4F9;
+  height: 100%;
+
   <div class="app-container">
     <div class="content">
       <router-view />

@@ -69,7 +69,12 @@ span {
   bottom: 0;
   max-width: 360px;
   width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  gap: 0;
+
   z-index: 999;
+
 }
 
 .navbar .nav-item {
