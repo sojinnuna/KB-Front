@@ -84,7 +84,8 @@ export default {
       gridHeight: 785 - 60 - 110, // 헤더와 + 버튼을 제외한 그리드 높이 계산
       gridWidth: 360, // 화면 너비
       gridSize: { x: 4, y: 6 }, // 그리드의 가로(8)와 세로(4) 크기 8, 4
-      gridSpacing: 90, // 각 그리드의 간격(픽셀) 45
+      gridSpacingX: 90, // 각 그리드의 간격(픽셀) 45
+      gridSpacingY: 98.125,
     };
   },
   methods: {
@@ -135,10 +136,10 @@ export default {
     // 위젯 간 겹침을 확인하는 메서드
     isOverlapping(widget1, widget2) {
       return (
-          widget1.x < widget2.x + this.gridSpacing &&
-          widget1.x + this.gridSpacing > widget2.x &&
-          widget1.y < widget2.y + this.gridSpacing &&
-          widget1.y + this.gridSpacing > widget2.y
+          widget1.x < widget2.x + this.gridSpacingX &&
+          widget1.x + this.gridSpacingX > widget2.x &&
+          widget1.y < widget2.y + this.gridSpacingY &&
+          widget1.y + this.gridSpacingY > widget2.y
       );
     },
 
@@ -165,7 +166,7 @@ export default {
         // 그리드 내에서 위치 제한
         newX = Math.max(
             0,
-            Math.min(newX, this.gridSpacing * (this.gridSize.x - 1))
+            Math.min(newX, this.gridSpacingX * (this.gridSize.x - 1))
         );
         newY = Math.max(
             0, Math.min(newY, this.gridHeight - 110
@@ -203,10 +204,36 @@ export default {
 
     // 드래그 종료 후 위치 업데이트
     stopDrag() {
-      this.isDragging = false;
-      this.dragIndex = null;
-      document.removeEventListener('mousemove', this.onDrag);
-      document.removeEventListener('mouseup', this.stopDrag);
+      if (this.isDragging) {
+        this.isDragging = false;
+
+        // 현재 드래그 중인 위젯
+        const widget = this.widgets[this.dragIndex];
+
+        // 가장 가까운 그리드 셀로 위치 조정
+        widget.x = Math.round(widget.x / this.gridSpacingX) * this.gridSpacingX;
+        widget.y = Math.round((widget.y - 60) / this.gridSpacingY) * this.gridSpacingY + 60;
+
+        // 화면 바깥으로 나가지 않도록 제한
+        widget.x = Math.min(
+            Math.max(widget.x, 0), // x 좌표 최소값 (왼쪽)
+            this.gridSpacingX * (this.gridSize.x - 1) // x 좌표 최대값 (오른쪽)
+        );
+
+        widget.y = Math.min(
+            Math.max(widget.y, 60), // y 좌표 최소값 (위쪽)
+            60 + this.gridSpacingY * (this.gridSize.y - 1) // y 좌표 최대값 (아래쪽)
+        );
+
+        // 겹치는 위젯이 있으면 위치를 조정
+        this.resolveOverlap(widget);
+
+        this.dragIndex = null;
+
+        // 이벤트 리스너 제거
+        document.removeEventListener("mousemove", this.onDrag);
+        document.removeEventListener("mouseup", this.stopDrag);
+      }
     },
 
     resolveOverlap(widget) {
@@ -219,18 +246,18 @@ export default {
           if (widget !== otherWidget && this.isOverlapping(widget, otherWidget)) {
             isOverlapping = true;
 
-            // 오른쪽으로 이동
-            widget.x += this.gridSpacing;
+            // 위치를 오른쪽으로 이동 (한 칸 크기만큼)
+            widget.x += this.gridSpacingX;
 
-            // 오른쪽 끝에 도달하면 아래로 이동
-            if (widget.x >= this.gridSpacing * this.gridSize.x) {
-              widget.x = 0; // 왼쪽으로 리셋
-              widget.y += this.gridSpacing;
+            // 화면 경계를 넘어가면 다음 줄로 이동
+            if (widget.x >= this.gridSpacingX * this.gridSize.x) {
+              widget.x = 0;
+              widget.y += this.gridSpacingY;
             }
 
-            // 아래로 이동하다가 화면 바깥으로 나가면 다시 위로 리셋
-            if (widget.y > 60 + this.gridSpacing * (this.gridSize.y - 1)) {
-              widget.y = 60; // 위쪽으로 돌아감
+            // 화면 바깥으로 나가지 않도록 제한
+            if (widget.y > 60 + this.gridSpacingY * (this.gridSize.y - 1)) {
+              widget.y = 60; // 다시 처음 줄로 이동
             }
 
             break;
