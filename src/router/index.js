@@ -1,6 +1,5 @@
-
-import { createRouter, createWebHistory } from "vue-router";
-import UIUX from "@/pages/UIUX.vue";
+import { createRouter, createWebHistory } from 'vue-router';
+import UIUX from '@/pages/UXUI.vue';
 import Trend from "@/pages/trend/Trend.vue";
 import Loading from "@/pages/product/Loading.vue";
 import MatchingProducts from "@/pages/product/MatchingProducts.vue";
@@ -8,7 +7,7 @@ import Accountbook from "@/pages/account/Accountbook.vue";
 import ChatBot from "@/pages/business/ChatBot.vue";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+    history: createWebHistory(import.meta.env.BASE_URL),
 
   routes: [
     {
