@@ -1,83 +1,164 @@
 <template>
-  <div>
-    <footer class="footer fixed-bottom">
-      <hr style="margin-top: 0%;">
-      <ul class="nav justify-content-center">
-        <li class="nav-item">
-          <router-link to="/" class="nav-link text-body-secondary d-flex flex-column align-items-center">
-            <i class="fa-solid fa-house icon-large"></i>
-            <span>Home</span>
-          </router-link>
-        </li>
-        <li class="nav-item item-margin">
-          <router-link to="/shop" class="nav-link text-body-secondary d-flex flex-column align-items-center">
-            <i class="fa-solid fa-bag-shopping icon-large"></i>
-            <span>금융상품</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/wish" class="nav-link text-body-secondary d-flex flex-column align-items-center">
-            <i class="fa-solid fa-star icon-large"></i>
-            <span>관심</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/dict" class="nav-link text-body-secondary d-flex flex-column align-items-center">
-            <i class="fa-solid fa-book-bookmark icon-large"></i>
-            <span>사전</span>
-          </router-link>
-        </li>
-        <li class="nav-item item-margin last-item">
-          <router-link to="/auth" class="nav-link text-body-secondary d-flex flex-column align-items-center">
-            <i class="fa-solid fa-user icon-large"></i>
-            <span>마이페이지</span>
-          </router-link>
-        </li>
-      </ul>
-    </footer>
+  <div class="navbar">
+    <router-link
+        to="/"
+        class="nav-item home"
+        exact-active-class="active"
+    >
+      <i class="fa-solid fa-file-invoice"></i>
+      <span>전체계좌</span>
+    </router-link>
+    <router-link
+        to="/trend"
+        class="nav-item my-assets"
+        :class="{ active: isActive('trend') }"
+    >
+      <i class="fa-solid fa-bag-shopping"></i>
+      <span>금융상품</span>
+    </router-link>
+
+    <router-link
+        to="/accountbook"
+        class="nav-item account-book"
+        exact-active-class="active"
+    >
+      <i class="fa-solid fa-chart-pie"></i>
+      <span>자산관리</span>
+    </router-link>
+    <router-link
+        to="/accountbook"
+        class="nav-item account-book"
+        exact-active-class="active"
+    >
+      <i class="fa-solid fa-gift"></i>
+      <span>혜택</span>
+    </router-link>
+    <router-link
+        to="/businesscard"
+        class="nav-item business-card"
+        exact-active-class="active"
+    >
+      <i class="fa-solid fa-mobile-retro"></i>
+      <span>통신</span>
+    </router-link>
   </div>
 </template>
 
+<script setup>
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+
+// 현재 경로가 /trend, /loading, /matchingProducts일 때 활성화 상태 적용
+const isActive = (path) => {
+  // 'trend' 경로가 활성화되는 조건
+  if (path === 'trend') {
+    return (
+        route.path === '/trend' || // 경로가 /trend일 때
+        (route.path === '/matchingProducts' && route.query.group && route.query.keyword) || // /matchingProducts에서 group과 keyword가 있을 때
+        (route.path === '/loading' && route.query.group && route.query.keyword) // /loading에서 group과 keyword가 있을 때
+    );
+  }
+  // 다른 경로가 활성화되는 조건
+  return route.path === path;
+};
+
+</script>
+
 <style scoped>
-.footer {
-  width: 100vw;
-  background-color: #f8f9fa;
-  padding-bottom: 5px;
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+    format('woff');
+  font-weight: 400;
+  font-style: normal;
 }
 
-.nav {
+body,
+h2,
+label,
+button,
+input,
+span {
+  font-family: 'Pretendard', sans-serif;
+}
+
+.navbar {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
-  max-width: 1200px;
+  height: 110px;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  bottom: 0;
+  max-width: 360px;
   margin: 0 auto;
   gap: 0;
+  z-index: 999;
 }
 
-.icon-large {
-  font-size: 24px; /* 아이콘 크기를 고정 */
-  transition: color 0.3s;
-}
-
-.nav-link {
-  text-align: center;
-  padding: 0;
+.navbar .nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 70px; /* 가로 크기를 70으로 설정 */
+  font-size: 14px;
+  color: #555;
+  flex: 1;
+  text-decoration: none;
 }
 
-.item-margin {
-  margin: 0 5px; /* 양쪽에 약간의 여백 추가 */
+.navbar .nav-item i {
+  font-size: 24px;
+  margin-bottom: 15px;
+  padding: 5px;
+  transition: background-color 0.3s, border-radius 0.3s;
 }
 
-.last-item {
-  margin-left: 10px; /* 마지막 항목에 추가 여백 */
+.navbar .nav-item.active i {
+  background-color: #dcdcdc; /* 회색 배경 */
+  border-radius: 50%; /* 동그란 모양 */
+  padding: 5px; /* 아이콘 주위에 여백을 추가하여 원 형태로 보이도록 */
 }
 
-/* hover 효과 */
-.nav-link:hover .icon-large {
-  color: #FFBB00;
+/* 버튼 스타일 */
+.pay-btn {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 60px;
+  background-color: #6981d6;
+  border-radius: 40px;
+  color: white;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  border: none;
+}
+
+/* 아이콘과 텍스트를 수직으로 쌓기 위한 스타일 */
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 활성화된 네비게이션 아이템 스타일 */
+.navbar .nav-item.active {
+  color: #7189ff;
+  font-weight: bold;
+}
+
+/* flex-grow 조정 삭제 */
+.nav-item:nth-child(4),
+.nav-item:nth-child(2) {
+  flex-grow: 1;
 }
 </style>

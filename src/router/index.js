@@ -1,13 +1,38 @@
 import { createRouter, createWebHistory } from "vue-router";
-import ChatBot from "../pages/ChatBot.vue";
+import UIUX from "@/pages/UiUx.vue";
+import Trend from "@/pages/trend/Trend.vue";
+import Loading from "@/pages/product/Loading.vue";
+import MatchingProducts from "@/pages/product/MatchingProducts.vue";
+import Accountbook from "@/pages/account/Accountbook.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+
   routes: [
     {
-      path: "/auth", // 이 경로로 접근할 때
-      name: "ChatBot", // 경로 이름 (옵션)
-      component: ChatBot, // ChatBot 컴포넌트를 렌더링합니다.
+      path: "/trend",
+      name: "trend",
+      component: Trend,
+    },
+    {
+      path: "/loading",
+      name: "loading",
+      component: Loading,
+    },
+    {
+      path: "/matchingProducts",
+      name: "matchingProducts",
+      component: MatchingProducts,
+    },
+    {
+      path: "/uiux",
+      name: "UiUx",
+      component: UIUX,
+    },
+    {
+      path: "/accountbook",
+      name: "accountbook",
+      component: Accountbook,
     },
   ],
 });
