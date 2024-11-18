@@ -1,20 +1,19 @@
 <template>
   <div class="main-page">
     <!-- + 버튼 클릭 시 바텀 시트 표시, 바텀 시트 열리면 + 버튼 숨김 -->
-
     <div
-        v-if="!isBottomSheetVisible"
-        class="plus-box"
-        @click="toggleBottomSheet"
+      v-if="!isBottomSheetVisible"
+      class="plus-box"
+      @click="toggleBottomSheet"
     >
       <span class="plus-sign">{{ isEditingMode ? '완료' : '+' }}</span>
     </div>
 
     <!-- 바텀 시트 (toggle 상태에 따라 보여짐) -->
     <div
-        v-if="isBottomSheetVisible"
-        class="bottom-sheet"
-        :style="{ zIndex: bottomSheetZIndex }"
+      v-if="isBottomSheetVisible"
+      class="bottom-sheet"
+      :style="{ zIndex: bottomSheetZIndex }"
     >
       <div class="bottom-sheet-header">
         <h4>추가할 기능을 선택해주세요</h4>
@@ -23,10 +22,10 @@
       <div class="bottom-sheet-body">
         <!-- 클릭 가능한 기능 항목 -->
         <div
-            class="feature-item"
-            v-for="(feature, index) in features"
-            :key="index"
-            @click="handleFeatureClick(feature)"
+          class="feature-item"
+          v-for="(feature, index) in features"
+          :key="index"
+          @click="handleFeatureClick(feature)"
         >
           <div class="feature-content">
             <i class="fa-solid fa-circle-plus" style="color: #08af2a"></i>
@@ -43,11 +42,11 @@
 
     <!-- 위젯이 표시될 위치 관리 -->
     <div
-        v-for="(widget, index) in widgets"
-        :key="index"
-        class="widget"
-        :style="{ top: widget.y + 'px', left: widget.x + 'px' }"
-        @mousedown="isEditingMode && startDrag($event, index)"
+      v-for="(widget, index) in widgets"
+      :key="index"
+      class="widget"
+      :style="{ top: widget.y + 'px', left: widget.x + 'px' }"
+      @mousedown="isEditingMode && startDrag($event, index)"
     >
       <div class="widget-content">
         <span>{{ widget.name }}</span>
@@ -106,6 +105,13 @@ export default {
       }
     },
     handleFeatureClick(feature) {
+      const isFeatureAdded = this.widgets.some(
+        (widget) => widget.name === feature
+      );
+      if (isFeatureAdded) {
+        alert(`${feature} 기능은 이미 추가된 기능입니다.`);
+        return; // 이미 추가된 항목은 추가하지 않음
+      }
       alert(`${feature} 기능을 선택했습니다.`);
       // 기능 클릭 시 위젯 추가
       const widget = {
@@ -136,10 +142,10 @@ export default {
     // 위젯 간 겹침을 확인하는 메서드
     isOverlapping(widget1, widget2) {
       return (
-          widget1.x < widget2.x + this.gridSpacingX &&
-          widget1.x + this.gridSpacingX > widget2.x &&
-          widget1.y < widget2.y + this.gridSpacingY &&
-          widget1.y + this.gridSpacingY > widget2.y
+        widget1.x < widget2.x + this.gridSpacingX &&
+        widget1.x + this.gridSpacingX > widget2.x &&
+        widget1.y < widget2.y + this.gridSpacingY &&
+        widget1.y + this.gridSpacingY > widget2.y
       );
     },
 
@@ -165,22 +171,20 @@ export default {
 
         // 그리드 내에서 위치 제한
         newX = Math.max(
-            0,
-            Math.min(newX, this.gridSpacingX * (this.gridSize.x - 1))
+          0,
+          Math.min(newX, this.gridSpacingX * (this.gridSize.x - 1))
         );
-        newY = Math.max(
-            0, Math.min(newY, this.gridHeight - 110
-        ));
+        newY = Math.max(0, Math.min(newY, this.gridHeight - 110));
 
         // 위젯의 x, y 좌표가 화면 바깥으로 나가지 않도록 제한
         this.widgets[this.dragIndex].x = Math.min(
-            Math.max(newX, 0), // x좌표 제한 (왼쪽 경계)
-            this.gridWidth - 90 // x좌표 제한 (오른쪽 경계)
+          Math.max(newX, 0), // x좌표 제한 (왼쪽 경계)
+          this.gridWidth - 90 // x좌표 제한 (오른쪽 경계)
         );
 
         this.widgets[this.dragIndex].y = Math.min(
-            Math.max(newY, 0), // y좌표 제한 (위쪽 경계)
-            this.gridHeight - 130 // y좌표 제한 (아래쪽 경계)
+          Math.max(newY, 0), // y좌표 제한 (위쪽 경계)
+          this.gridHeight - 110 // y좌표 제한 (아래쪽 경계)
         );
 
         // 드래그 중인 위젯과 다른 위젯들이 겹치지 않도록 체크
@@ -212,17 +216,17 @@ export default {
 
         // 가장 가까운 그리드 셀로 위치 조정
         widget.x = Math.round(widget.x / this.gridSpacingX) * this.gridSpacingX;
-        widget.y = Math.round((widget.y - 60) / this.gridSpacingY) * this.gridSpacingY + 60;
+        widget.y = Math.round(widget.y / this.gridSpacingY) * this.gridSpacingY;
 
         // 화면 바깥으로 나가지 않도록 제한
         widget.x = Math.min(
-            Math.max(widget.x, 0), // x 좌표 최소값 (왼쪽)
-            this.gridSpacingX * (this.gridSize.x - 1) // x 좌표 최대값 (오른쪽)
+          Math.max(widget.x, 0), // x 좌표 최소값 (왼쪽)
+          this.gridSpacingX * (this.gridSize.x - 1) // x 좌표 최대값 (오른쪽)
         );
 
         widget.y = Math.min(
-            Math.max(widget.y, 0), // y 좌표 최소값 (위쪽)
-            this.gridSpacingY * (this.gridSize.y - 1) // y 좌표 최대값 (아래쪽)
+          Math.max(widget.y, 0), // y 좌표 최소값 (위쪽)
+          this.gridSpacingY * (this.gridSize.y - 1) // y 좌표 최대값 (아래쪽)
         );
 
         // 겹치는 위젯이 있으면 위치를 조정
@@ -231,8 +235,8 @@ export default {
         this.dragIndex = null;
 
         // 이벤트 리스너 제거
-        document.removeEventListener("mousemove", this.onDrag);
-        document.removeEventListener("mouseup", this.stopDrag);
+        document.removeEventListener('mousemove', this.onDrag);
+        document.removeEventListener('mouseup', this.stopDrag);
       }
     },
 
@@ -243,7 +247,10 @@ export default {
         isOverlapping = false;
 
         for (const otherWidget of this.widgets) {
-          if (widget !== otherWidget && this.isOverlapping(widget, otherWidget)) {
+          if (
+            widget !== otherWidget &&
+            this.isOverlapping(widget, otherWidget)
+          ) {
             isOverlapping = true;
 
             // 위치를 오른쪽으로 이동 (한 칸 크기만큼)
@@ -264,7 +271,7 @@ export default {
           }
         }
       }
-    }
+    },
   },
 };
 </script>
@@ -277,26 +284,11 @@ export default {
   margin-top: 60px;
   background-color: #eef4f9;
   position: relative;
-
-  /* 그리드 스타일: 가로 4칸, 세로 8칸 */
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 가로 그리드 8칸 */
-  grid-template-rows: repeat(6, 1fr); /* 세로 그리드 4칸 */
-  gap: 1px;
-  position: relative;
-  background-color: #eef4f9;
-  background-image: linear-gradient(
-      to right,
-      rgba(0, 0, 0, 0.1) 1px,
-      transparent 1px
-  ),
-  linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
-  background-size: calc(360px / 4) calc(580px / 6);
 }
 
 .plus-box {
   position: fixed;
-  bottom: 120px;
+  bottom: 114px;
   left: 50%;
   transform: translateX(-50%);
   width: 200px;
