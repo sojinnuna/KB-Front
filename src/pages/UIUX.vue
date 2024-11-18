@@ -221,6 +221,21 @@ export default {
   margin: 0 auto;
   background-color: #eef4f9;
   position: relative;
+
+  /* 그리드 스타일: 가로 4칸, 세로 8칸 */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 가로 그리드 8칸 */
+  grid-template-rows: repeat(8, 1fr); /* 세로 그리드 4칸 */
+  gap: 1px;
+  position: relative;
+  background-color: #eef4f9;
+  background-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.1) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  background-size: calc(360px / 4) calc(785px / 8);
 }
 
 .plus-box {
@@ -240,8 +255,8 @@ export default {
 
 .widget {
   position: absolute;
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 98.125px;
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 15px;
   display: flex;
