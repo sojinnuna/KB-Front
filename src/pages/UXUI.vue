@@ -57,13 +57,9 @@
 </template>
 
 <script>
-import Header from '@/components/Header.vue';
-
 export default {
   name: 'UiUx',
-  components: {
-    Header,
-  },
+  components: {},
   data() {
     return {
       isBottomSheetVisible: false,
@@ -182,7 +178,7 @@ export default {
         );
 
         this.widgets[this.dragIndex].y = Math.min(
-            Math.max(newY, 60), // y좌표 제한 (위쪽 경계)
+            Math.max(newY, 0), // y좌표 제한 (위쪽 경계)
             this.gridHeight - 130 // y좌표 제한 (아래쪽 경계)
         );
 
@@ -248,17 +244,17 @@ export default {
 
 <style scoped>
 .main-page {
-  padding: 20px;
+  padding: 5px;
   width: 360px;
-  height: 785px;
-  margin: 0 auto;
+  height: 570px;
+  margin-top: 60px;
   background-color: #eef4f9;
   position: relative;
 
   /* 그리드 스타일: 가로 4칸, 세로 8칸 */
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 가로 그리드 8칸 */
-  grid-template-rows: repeat(8, 1fr); /* 세로 그리드 4칸 */
+  grid-template-rows: repeat(6, 1fr); /* 세로 그리드 4칸 */
   gap: 1px;
   position: relative;
   background-color: #eef4f9;
@@ -289,7 +285,7 @@ export default {
 .widget {
   position: absolute;
   width: 90px; /* 그리드 칸의 너비 */
-  height: 90px; /* 그리드 칸의 높이 */
+  height: 98.125px; /* 그리드 칸의 높이 */
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 15px;
   display: flex;
