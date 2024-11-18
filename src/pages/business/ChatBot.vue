@@ -112,23 +112,36 @@ export default {
 </script>
 
 <style scoped>
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eef4f9; /* 배경색 */
+}
+
 .chat-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
+  height: 100%;
+  max-width: none; /* 제한된 너비 제거 */
+  margin: 0;
   background-color: #eef4f9;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 0; /* 둥근 테두리 제거 */
+  padding: 0;
+  box-shadow: none; /* 그림자 제거 */
 }
 
 .chat-title {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin: 10px 0;
   color: #333;
 }
 
@@ -136,9 +149,9 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 500px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  height: calc(100% - 60px); /* 제목과 입력 영역을 제외한 높이 */
+  border: none;
+  border-radius: 0;
   background-color: white;
   overflow: hidden;
   position: relative;
@@ -146,7 +159,7 @@ export default {
 
 .chat-messages {
   flex: 1;
-  padding: 10px;
+  padding: 20px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -154,7 +167,7 @@ export default {
 }
 
 .message {
-  max-width: 80%;
+  max-width: 70%;
   padding: 10px;
   border-radius: 15px;
   font-size: 14px;
@@ -182,6 +195,7 @@ export default {
   gap: 10px;
   padding: 10px;
   border-top: 1px solid #ddd;
+  background-color: white;
 }
 
 .chat-input {
@@ -214,7 +228,7 @@ export default {
 /* 비디오 스타일 */
 .video-wrapper {
   width: 100%;
-  max-width: 300px;
+  max-width: 500px;
   aspect-ratio: 16 / 9;
   margin-top: 10px;
 }
