@@ -1,6 +1,6 @@
 <template>
   <div class="chat-container">
-    <h1 class="chat-title">KB 스타뱅킹 챗봇</h1>
+    <h1 class="chat-title">KB 챗봇</h1>
     <div class="chat-window">
       <div class="chat-messages">
         <div
@@ -8,14 +8,36 @@
           :key="index"
           :class="['message', message.type]"
         >
-          <div class="message-content">{{ message.text }}</div>
+          <!-- 유저 메시지 -->
+          <div v-if="message.type === 'user'" class="message-content">
+            {{ message.text }}
+          </div>
+
+          <!-- 챗봇 메시지 -->
+          <div v-else class="message-content">
+            <div v-if="message.isVideo">
+              <p>{{ message.text }}</p>
+              <div class="video-wrapper">
+                <iframe
+                  :src="`https://www.youtube.com/embed/${message.videoId}`"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  class="video-iframe"
+                ></iframe>
+              </div>
+            </div>
+            <div v-else>
+              {{ message.text }}
+            </div>
+          </div>
         </div>
       </div>
       <form @submit.prevent="askQuestion" class="chat-input-form">
         <input
           type="text"
           v-model="question"
-          placeholder="질문을 입력하세요..."
+          placeholder="질문을 입력해주세요."
           required
           class="chat-input"
         />
@@ -50,16 +72,36 @@ export default {
             },
           }
         );
-        // 챗봇 응답 메시지 추가
-        this.messages.push({
-          type: "bot",
-          text: `챗봇 응답: ${result.data}`,
-        });
+
+        // 동영상 URL과 텍스트를 포함한 응답인 경우 처리
+        const responseText = result.data;
+        const videoMatch = responseText.match(
+          /URL: https:\/\/www\.youtube\.com\/watch\?v=([\w-]+)/
+        );
+
+        if (videoMatch) {
+          const videoId = videoMatch[1];
+
+          this.messages.push({
+            type: "bot",
+            text: responseText.split("URL:")[0].trim(),
+            isVideo: true,
+            videoId,
+          });
+        } else {
+          // 일반 텍스트 응답 처리
+          this.messages.push({
+            type: "bot",
+            text: responseText,
+            isVideo: false,
+          });
+        }
       } catch (error) {
         console.error("Error:", error);
         this.messages.push({
           type: "bot",
           text: "질문을 처리하는 중 오류가 발생했습니다.",
+          isVideo: false,
         });
       } finally {
         this.question = ""; // 입력 창 초기화
@@ -167,5 +209,20 @@ export default {
 
 .chat-send-button:active {
   background-color: #078a1f;
+}
+
+/* 비디오 스타일 */
+.video-wrapper {
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 16 / 9;
+  margin-top: 10px;
+}
+
+.video-iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  border: none;
 }
 </style>
