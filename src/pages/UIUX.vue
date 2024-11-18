@@ -1,13 +1,12 @@
 <template>
   <div class="main-page">
-    <Header />
     <!-- + 버튼 클릭 시 바텀 시트 표시, 바텀 시트 열리면 + 버튼 숨김 -->
     <div
       v-if="!isBottomSheetVisible"
       class="plus-box"
       @click="toggleBottomSheet"
     >
-      <span class="plus-sign">+</span>
+      <span class="plus-sign">{{ isEditingMode ? '완료' : '+' }}</span>
     </div>
 
     <!-- 바텀 시트 (toggle 상태에 따라 보여짐) -->
@@ -47,7 +46,7 @@
       :key="index"
       class="widget"
       :style="{ top: widget.y + 'px', left: widget.x + 'px' }"
-      @mousedown="startDrag($event, index)"
+      @mousedown="isEditingMode && startDrag($event, index)"
     >
       <div class="widget-content">
         <span>{{ widget.name }}</span>
@@ -68,6 +67,7 @@ export default {
     return {
       isBottomSheetVisible: false,
       bottomSheetZIndex: 1, // 바텀 시트의 z-index 초기값
+      isEditingMode: false, // 편집 모드 여부
       widgets: [], // 위젯 목록
       features: [
         '계좌이체',
@@ -92,8 +92,20 @@ export default {
   },
   methods: {
     toggleBottomSheet() {
-      this.isBottomSheetVisible = !this.isBottomSheetVisible;
-      this.bottomSheetZIndex = this.isBottomSheetVisible ? 999 : 1;
+      if (this.isEditingMode) {
+        // 편집 모드에서 "완료" 버튼 클릭 시 편집 모드 종료
+        this.isEditingMode = false;
+        this.widgets.forEach((widget) => {
+          widget.draggable = false; // 드래그 비활성화
+        });
+      } else {
+        this.isBottomSheetVisible = !this.isBottomSheetVisible;
+        this.bottomSheetZIndex = this.isBottomSheetVisible ? 999 : 1;
+        this.isEditingMode = true; // 편집 모드 시작
+        this.widgets.forEach((widget) => {
+          widget.draggable = true; // 편집 모드에서 드래그 활성화
+        });
+      }
     },
     handleFeatureClick(feature) {
       alert(`${feature} 기능을 선택했습니다.`);
@@ -103,6 +115,7 @@ export default {
         x: 10, // 초기 X 좌표 (0으로 시작)
         y: 60, // 초기 Y 좌표 (0으로 시작)
         zindex: 1,
+        draggable: this.isEditingMode, // 편집 모드일 때만 드래그 가능
       };
 
       // 위젯 위치가 다른 위젯과 겹치지 않도록 확인
@@ -122,6 +135,7 @@ export default {
       this.isBottomSheetVisible = false; // 바텀 시트 숨기기
     },
 
+    // 위젯 간 겹침을 확인하는 메서드
     isOverlapping(widget1, widget2) {
       return (
         widget1.x < widget2.x + 100 &&
@@ -131,7 +145,10 @@ export default {
       );
     },
 
+    // 드래그 시작 시 좌표 및 상태 설정
     startDrag(event, index) {
+      if (!this.widgets[index].draggable) return; // 드래그가 비활성화된 경우 처리 안 함
+
       this.isDragging = true;
       this.dragIndex = index;
       this.offsetX = event.clientX - this.widgets[index].x;
@@ -142,6 +159,7 @@ export default {
       document.addEventListener('mouseup', this.stopDrag);
     },
 
+    // 드래그 중 위치 갱신
     onDrag(event) {
       if (this.isDragging) {
         let newX = event.clientX - this.offsetX;
@@ -164,8 +182,27 @@ export default {
           Math.max(newY, 60), // y좌표 제한 (위쪽 경계)
           this.gridHeight - 100 // y좌표 제한 (아래쪽 경계)
         );
+
+        // 드래그 중인 위젯과 다른 위젯들이 겹치지 않도록 체크
+        let isOverlapping = false;
+        for (const existingWidget of this.widgets) {
+          if (
+            this.isOverlapping(this.widgets[this.dragIndex], existingWidget)
+          ) {
+            isOverlapping = true;
+            break;
+          }
+        }
+
+        if (!isOverlapping) {
+          // 겹치지 않으면 위치를 갱신
+          this.widgets[this.dragIndex].x = newX;
+          this.widgets[this.dragIndex].y = newY;
+        }
       }
     },
+
+    // 드래그 종료 후 위치 업데이트
     stopDrag() {
       this.isDragging = false;
       this.dragIndex = null;
@@ -184,11 +221,26 @@ export default {
   margin: 0 auto;
   background-color: #eef4f9;
   position: relative;
+
+  /* 그리드 스타일: 가로 4칸, 세로 8칸 */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 가로 그리드 8칸 */
+  grid-template-rows: repeat(8, 1fr); /* 세로 그리드 4칸 */
+  gap: 1px;
+  position: relative;
+  background-color: #eef4f9;
+  background-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.1) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  background-size: calc(360px / 4) calc(785px / 8);
 }
 
 .plus-box {
   position: fixed;
-  bottom: 110px;
+  bottom: 120px;
   left: 50%;
   transform: translateX(-50%);
   width: 200px;
@@ -203,14 +255,15 @@ export default {
 
 .widget {
   position: absolute;
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 98.125px;
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: grab;
+  z-index: 1;
 }
 
 .widget-content {
@@ -220,7 +273,7 @@ export default {
 }
 
 .plus-sign {
-  font-size: 60px;
+  font-size: 40px;
   font-weight: bolder;
   color: rgb(0, 0, 0);
 }

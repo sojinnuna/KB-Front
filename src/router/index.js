@@ -1,3 +1,4 @@
+
 import { createRouter, createWebHistory } from "vue-router";
 import UIUX from "@/pages/UIUX.vue";
 import Trend from "@/pages/trend/Trend.vue";
