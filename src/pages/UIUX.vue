@@ -221,8 +221,8 @@ export default {
         );
 
         widget.y = Math.min(
-            Math.max(widget.y, 60), // y 좌표 최소값 (위쪽)
-            60 + this.gridSpacingY * (this.gridSize.y - 1) // y 좌표 최대값 (아래쪽)
+            Math.max(widget.y, 0), // y 좌표 최소값 (위쪽)
+            this.gridSpacingY * (this.gridSize.y - 1) // y 좌표 최대값 (아래쪽)
         );
 
         // 겹치는 위젯이 있으면 위치를 조정
