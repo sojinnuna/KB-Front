@@ -6,27 +6,29 @@
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-    <div class="contentBox" v-if="!loading && Object.keys(topTrendingKeywords).length">
-      <br>
-      <swiper
-          :pagination="{ dynamicBullets: true }"
-          :modules="[Pagination, Autoplay]"
-          class="mySwipe trendBox"
-          :loop="true"
-          :autoplay="{ delay: 3000, disableOnInteraction: false }"
-      >
-        <swiper-slide v-for="(keyword, group) in topTrendingKeywords" :key="group">
-          <div class="content" @click="navigateToLoading(group, keyword)">
-            <div class="fin">
-              지금 트렌드는 <strong>[{{ keyword }}]</strong><br />
-              {{ group }}에 어울리는<img src="../../assets/images/kbkb.png" alt="kb" id="kb">금융상품은?
+    <div class="contentParents">
+      <div class="contentBox" v-if="!loading && Object.keys(topTrendingKeywords).length">
+        <br>
+        <swiper
+            :pagination="{ dynamicBullets: true }"
+            :modules="[Pagination, Autoplay]"
+            class="mySwipe trendBox"
+            :loop="true"
+            :autoplay="{ delay: 3000, disableOnInteraction: false }"
+        >
+          <swiper-slide v-for="(keyword, group) in topTrendingKeywords" :key="group">
+            <div class="content" @click="navigateToLoading(group, keyword)">
+              <div class="fin">
+                지금 트렌드는 <strong>[{{ keyword }}]</strong><br />
+                {{ group }}에 어울리는 KB금융상품은?
+              </div>
+              <div class="emoji">
+                <img class="ThreedEmoji" :src="getEmoji(group)" alt="emoji" />
+              </div>
             </div>
-            <div class="emoji">
-              {{ getEmoji(group) }}
-            </div>
-          </div>
-        </swiper-slide>
-      </swiper>
+          </swiper-slide>
+        </swiper>
+      </div>
     </div>
   </div>
 </template>
@@ -75,18 +77,18 @@ const navigateToLoading = (group, keyword) => {
 
 const getEmoji = (group) => {
   const emojiMap = {
-    여행: '✈️',
-    쇼핑: '🛒',
-    금융: '💰',
-    음식: '🍔',
-    반려동물: '🐶',
-    엔터테인먼트: '🎬',
-    자동차: '🚗',
-    건강: '🩺',
-    교육: '📚',
-    기술: '📱',
+    여행: '/images/airplane_3d.png',
+    쇼핑: '/images/shopping_cart_3d.png',
+    금융: '/images/money_bag_3d.png',
+    음식: '/images/hamburger_3d.png',
+    반려동물: '/images/cat_with_wry_smile_3d.png',
+    엔터테인먼트: '/images/film_frames_3d.png',
+    자동차: '/images/bus_3d.png',
+    건강: '/images/stethoscope_3d.png',
+    교육: '/images/books_3d.png',
+    기술: '/images/mobile_phone_3d.png',
   };
-  return emojiMap[group] || '📌'; // 기본 이모티콘
+  return emojiMap[group] || '😁';
 };
 
 onMounted(() => {
@@ -96,8 +98,8 @@ onMounted(() => {
 
 <style scoped>
 .contentBox{
-  background-color: white;
-  height: 14vh;
+  height: 18vh;
+  padding-top: 60px;
 }
 
 .loading {
@@ -133,14 +135,23 @@ onMounted(() => {
 }
 
 .emoji {
-  font-size: 30px;
   text-align: right;
 }
+
+.ThreedEmoji{
+  width: 30px;
+}
+
 
 #kb{
   width: 100%;
   max-width:35px;
   margin-right: -5px;
   margin-top: -5px;
+}
+
+.contentParents{
+  height: 100px;
+  background-color: #eef4f9;
 }
 </style>

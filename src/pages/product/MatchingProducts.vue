@@ -50,6 +50,20 @@ const fetchProducts = async () => {
   }
 };
 
+const getLimitedBenefits = (benefitsString) => {
+  // Split the benefits by commas
+  const benefits = benefitsString.split(',').map(b => b.trim());
+
+  // Filter out benefits that contain the keyword and show them first
+  const keywordBenefits = benefits.filter(b => b.includes(keyword));
+  const otherBenefits = benefits.filter(b => !b.includes(keyword));
+
+  // Combine the keyword-related benefits with the rest, showing only the first 3
+  const limitedBenefits = [...keywordBenefits, ...otherBenefits].slice(0, 3);
+
+  return limitedBenefits;
+};
+
 
 // 상품 클릭 시 URL로 이동
 const navigateToProduct = (url) => {
@@ -85,7 +99,7 @@ onMounted(() => {
           :autoplay="{ delay: 3000, disableOnInteraction: false }"
           class="product-swiper"
           loop
-          :style="{ height: '450px' }"
+          :style="{ height: '400px' }"
       >
         <swiper-slide
             v-for="product in keywordProducts"
@@ -96,12 +110,23 @@ onMounted(() => {
           <img :src="product.imagePath" alt="Product Image" class="product-image" />
           <br><br>
           <h4>{{ product.productName }}</h4>
+
+          <!-- Benefit List: Show up to 3 items and ensure keyword-related benefits are first -->
           <ul class="benefit-list">
-            <li v-for="benefit in product.benefit.split(',')" :key="benefit.trim()" class="benefit-item">
-              {{ benefit.trim() }}
+            <li
+                v-for="(benefit, index) in getLimitedBenefits(product.benefit)"
+                :key="index"
+                class="benefit-item"
+            >
+              {{ benefit }}
+
+            </li>
+            <li class="click">
+              * 클릭 시 자세한 페이지로 이동
             </li>
           </ul>
         </swiper-slide>
+
       </swiper>
       <p v-else>정확히 일치하는 상품이 없습니다.</p>
     </div>
@@ -147,7 +172,8 @@ onMounted(() => {
 
 /* Swiper 간격 조정 */
 .product-swiper {
-  height: 450px; /* Swiper 고정 높이 */
+  height: 400px; /* Swiper 고정 높이 */
+  cursor: pointer;
 }
 
 /* Swiper 내부 아이템 스타일 */
@@ -210,5 +236,12 @@ h6 {
   max-width: 70px;
   margin-right: -10px;
   margin-top: -5px;
+}
+
+.click{
+  text-align: start;
+  font-size: 10px;
+  color: #7189ff;
+  padding:10px;
 }
 </style>
