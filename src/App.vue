@@ -25,6 +25,7 @@ export default {
 .app-container {
   width: 360px;
   height: 100vh; /* 화면 전체를 채움 */
+  max-height: 800px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -54,7 +55,6 @@ footer {
 /* 콘텐츠 영역 */
 .content {
   flex: 1;
-  margin-top: 60px; /* 헤더 높이 만큼 여백 */
   margin-bottom: 110px; /* 푸터 높이 만큼 여백 */
   overflow-y: auto; /* 스크롤 가능 */
   box-sizing: border-box;
