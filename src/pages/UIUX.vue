@@ -1,6 +1,7 @@
 <template>
   <div class="main-page">
     <!-- + 버튼 클릭 시 바텀 시트 표시, 바텀 시트 열리면 + 버튼 숨김 -->
+
     <div
       v-if="!isBottomSheetVisible"
       class="plus-box"
@@ -56,13 +57,9 @@
 </template>
 
 <script>
-import Header from '@/components/Header.vue';
-
 export default {
   name: 'UiUx',
-  components: {
-    Header,
-  },
+  components: {},
   data() {
     return {
       isBottomSheetVisible: false,
@@ -86,8 +83,8 @@ export default {
       offsetY: 0, // 드래그 시작 시 offset 값
       gridHeight: 785 - 60 - 110, // 헤더와 + 버튼을 제외한 그리드 높이 계산
       gridWidth: 360, // 화면 너비
-      gridSize: { x: 8, y: 4 }, // 그리드의 가로(8)와 세로(4) 크기
-      gridSpacing: 45, // 각 그리드의 간격(픽셀)
+      gridSize: { x: 4, y: 6 }, // 그리드의 가로(8)와 세로(4) 크기
+      gridSpacing: 90, // 각 그리드의 간격(픽셀)
     };
   },
   methods: {
@@ -112,8 +109,8 @@ export default {
       // 기능 클릭 시 위젯 추가
       const widget = {
         name: feature,
-        x: 10, // 초기 X 좌표 (0으로 시작)
-        y: 60, // 초기 Y 좌표 (0으로 시작)
+        x: 0, // 초기 X 좌표 (0으로 시작)
+        y: 0, // 초기 Y 좌표 (0으로 시작)
         zindex: 1,
         draggable: this.isEditingMode, // 편집 모드일 때만 드래그 가능
       };
@@ -170,17 +167,20 @@ export default {
           0,
           Math.min(newX, this.gridSpacing * (this.gridSize.x - 1))
         );
-        newY = Math.max(60, Math.min(newY, this.gridHeight - 100));
+        newY = Math.max(
+          0, // y좌표 제한 (위쪽 경계 60px)
+          Math.min(newY, this.gridHeight - 110) // y좌표 제한 (아래쪽 경계 110px)
+        );
 
         // 위젯의 x, y 좌표가 화면 바깥으로 나가지 않도록 제한
         this.widgets[this.dragIndex].x = Math.min(
           Math.max(newX, 0), // x좌표 제한 (왼쪽 경계)
-          this.gridWidth - 100 // x좌표 제한 (오른쪽 경계)
+          this.gridWidth - 90 // x좌표 제한 (오른쪽 경계)
         );
 
         this.widgets[this.dragIndex].y = Math.min(
-          Math.max(newY, 60), // y좌표 제한 (위쪽 경계)
-          this.gridHeight - 100 // y좌표 제한 (아래쪽 경계)
+          Math.max(newY, 0), // y좌표 제한 (위쪽 경계 60px)
+          this.gridHeight - 130 // y좌표 제한 (아래쪽 경계 110px)
         );
 
         // 드래그 중인 위젯과 다른 위젯들이 겹치지 않도록 체크
@@ -215,17 +215,17 @@ export default {
 
 <style scoped>
 .main-page {
-  padding: 20px;
+  padding: 5px;
   width: 360px;
-  height: 785px;
-  margin: 0 auto;
+  height: 570px;
+  margin-top: 60px;
   background-color: #eef4f9;
   position: relative;
 
   /* 그리드 스타일: 가로 4칸, 세로 8칸 */
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 가로 그리드 8칸 */
-  grid-template-rows: repeat(8, 1fr); /* 세로 그리드 4칸 */
+  grid-template-rows: repeat(6, 1fr); /* 세로 그리드 4칸 */
   gap: 1px;
   position: relative;
   background-color: #eef4f9;
@@ -235,7 +235,7 @@ export default {
       transparent 1px
     ),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
-  background-size: calc(360px / 4) calc(785px / 8);
+  background-size: calc(360px / 4) calc(580px / 6);
 }
 
 .plus-box {
@@ -377,7 +377,7 @@ export default {
 /* 그리드 스타일: 4x8 그리드 */
 .main-page {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(4, 1fr);
   gap: 0;
   position: relative;
