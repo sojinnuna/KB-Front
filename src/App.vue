@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-
     <Header />
 
     <div class="content">
@@ -10,15 +9,14 @@
   </div>
 </template>
 
-
 <script>
-import Footer from './components/Footer.vue';
-import Header from './components/Header.vue';
+import Footer from "./components/Footer.vue";
+import Header from "./components/Header.vue";
 
 export default {
   components: {
     Footer,
-    Header
+    Header,
   },
 };
 </script>
@@ -32,6 +30,7 @@ export default {
   flex-direction: column;
   position: relative;
   box-sizing: border-box;
+  background-color: rgba(238, 244, 249, 1);
 }
 
 /* 헤더 고정 */
@@ -61,4 +60,3 @@ footer {
   box-sizing: border-box;
 }
 </style>
-
