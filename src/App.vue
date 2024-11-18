@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-
     <Header />
 
     <div class="content">
@@ -10,15 +9,14 @@
   </div>
 </template>
 
-
 <script>
-import Footer from './components/Footer.vue';
-import Header from './components/Header.vue';
+import Footer from "./components/Footer.vue";
+import Header from "./components/Header.vue";
 
 export default {
   components: {
     Footer,
-    Header
+    Header,
   },
 };
 </script>
@@ -62,4 +60,3 @@ footer {
   box-sizing: border-box;
 }
 </style>
-
