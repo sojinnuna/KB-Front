@@ -13,49 +13,56 @@
     >
       <span class="plus-sign">위젯 추가하기</span>
     </div>
-  </div>
 
-  <!-- 바텀 시트 (toggle 상태에 따라 보여짐) -->
-  <div
-    v-if="isBottomSheetVisible"
-    class="bottom-sheet"
-    :style="{ zIndex: bottomSheetZIndex }"
-  >
-    <div class="bottom-sheet-header">
-      <h4>추가할 기능을 선택해주세요</h4>
-    </div>
+    <!-- 바텀 시트 (toggle 상태에 따라 보여짐) -->
+    <div
+      v-if="isBottomSheetVisible"
+      class="bottom-sheet"
+      :style="{ zIndex: bottomSheetZIndex }"
+    >
+      <div class="bottom-sheet-header">
+        <h4>추가할 기능을 선택해주세요</h4>
+      </div>
 
-    <div class="bottom-sheet-body">
-      <!-- 클릭 가능한 기능 항목 -->
-      <div
-        class="feature-item"
-        v-for="(feature, index) in features"
-        :key="index"
-        @click="handleFeatureClick(feature)"
-      >
-        <div class="feature-content">
-          <i class="fa-solid fa-circle-plus" style="color: #08af2a"></i>
-          <span>&nbsp;{{ feature }}</span>
+      <div class="bottom-sheet-body">
+        <!-- 클릭 가능한 기능 항목 -->
+        <div
+          class="feature-item"
+          v-for="(feature, index) in features"
+          :key="index"
+          @click="handleFeatureClick(feature)"
+        >
+          <div class="feature-content">
+            <i class="fa-solid fa-circle-plus" style="color: #08af2a"></i>
+            <span>&nbsp;{{ feature }}</span>
+          </div>
+          <hr class="feature-divider" />
         </div>
-        <hr class="feature-divider" />
+      </div>
+
+      <div class="bottom-sheet-footer">
+        <button @click="toggleBottomSheet">닫기</button>
       </div>
     </div>
 
-    <div class="bottom-sheet-footer">
-      <button @click="toggleBottomSheet">닫기</button>
-    </div>
-  </div>
-
-  <!-- 위젯이 표시될 위치 관리 -->
-  <div
-    v-for="(widget, index) in widgets"
-    :key="index"
-    class="widget"
-    :style="{ top: widget.y + 'px', left: widget.x + 'px' }"
-    @mousedown="isEditingMode && startDrag($event, index)"
-  >
-    <div class="widget-content">
-      <span>{{ widget.name }}</span>
+    <!-- 위젯이 표시될 위치 관리 -->
+    <div
+      v-for="(widget, index) in widgets"
+      :key="index"
+      class="widget"
+      :style="{ top: widget.y + 'px', left: widget.x + 'px' }"
+      @mousedown="isEditingMode && startDrag($event, index)"
+    >
+      <div class="widget-content">
+        <span>{{ widget.name }}</span>
+        <button
+          v-if="isEditingMode"
+          class="delete-button"
+          @click.stop="deleteWidget(index)"
+        >
+          x
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -99,6 +106,11 @@ export default {
     }
   },
   methods: {
+    // 위젯 삭제 메서드
+    deleteWidget(index) {
+      this.widgets.splice(index, 1);
+      alert('위젯이 삭제되었습니다.');
+    },
     saveWidgetPositions() {
       const widgetPositions = this.widgets.map((widget) => ({
         name: widget.name,
@@ -339,6 +351,21 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+.delete-button {
+  position: absolute;
+  top: 4px; /* 위젯의 상단 */
+  right: 4px; /* 위젯의 오른쪽 */
+  transform: translate(50%, -50%); /* 약간의 위치 조정을 위해 변환 */
+  background-color: #fff(251, 251, 251);
+  color: #333;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  z-index: 10; /* 삭제 버튼이 위젯 콘텐츠 위에 나타나도록 설정 */
 }
 
 .widget {
