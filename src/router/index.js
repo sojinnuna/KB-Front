@@ -5,6 +5,7 @@ import Loading from '@/pages/product/Loading.vue';
 import MatchingProducts from '@/pages/product/MatchingProducts.vue';
 import Accountbook from '@/pages/account/Accountbook.vue';
 import ChatBot from '@/pages/business/ChatBot.vue';
+import UiuxEdit from '@/pages/UiuxEdit.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +30,11 @@ const router = createRouter({
       path: '/uiux',
       name: 'UiUx',
       component: UIUX,
+    },
+    {
+      path: '/uiuxedit',
+      name: 'UiuxEdit',
+      component: UiuxEdit,
     },
     {
       path: '/accountbook',
