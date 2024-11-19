@@ -1,63 +1,61 @@
 <template>
   <div class="main-page">
-    <div class="button-container">
-      <!-- 새로운 상자 -->
-      <div class="plus-box2" @click="saveWidgetPositions">
-        <span class="plus-sign">저장하기</span>
-      </div>
+    <!-- 새로운 상자 -->
+    <div class="plus-box2" @click="saveWidgetPositions">
+      <span class="plus-sign">저장하기</span>
+    </div>
 
-      <!-- 기존 + 버튼 -->
+    <!-- 기존 + 버튼 -->
+    <div
+      v-if="!isBottomSheetVisible"
+      class="plus-box"
+      @click="toggleBottomSheet"
+    >
+      <span class="plus-sign">위젯 추가하기</span>
+    </div>
+  </div>
+
+  <!-- 바텀 시트 (toggle 상태에 따라 보여짐) -->
+  <div
+    v-if="isBottomSheetVisible"
+    class="bottom-sheet"
+    :style="{ zIndex: bottomSheetZIndex }"
+  >
+    <div class="bottom-sheet-header">
+      <h4>추가할 기능을 선택해주세요</h4>
+    </div>
+
+    <div class="bottom-sheet-body">
+      <!-- 클릭 가능한 기능 항목 -->
       <div
-        v-if="!isBottomSheetVisible"
-        class="plus-box"
-        @click="toggleBottomSheet"
+        class="feature-item"
+        v-for="(feature, index) in features"
+        :key="index"
+        @click="handleFeatureClick(feature)"
       >
-        <span class="plus-sign">위젯 추가하기</span>
-      </div>
-    </div>
-
-    <!-- 바텀 시트 (toggle 상태에 따라 보여짐) -->
-    <div
-      v-if="isBottomSheetVisible"
-      class="bottom-sheet"
-      :style="{ zIndex: bottomSheetZIndex }"
-    >
-      <div class="bottom-sheet-header">
-        <h4>추가할 기능을 선택해주세요</h4>
-      </div>
-
-      <div class="bottom-sheet-body">
-        <!-- 클릭 가능한 기능 항목 -->
-        <div
-          class="feature-item"
-          v-for="(feature, index) in features"
-          :key="index"
-          @click="handleFeatureClick(feature)"
-        >
-          <div class="feature-content">
-            <i class="fa-solid fa-circle-plus" style="color: #08af2a"></i>
-            <span>&nbsp;{{ feature }}</span>
-          </div>
-          <hr class="feature-divider" />
+        <div class="feature-content">
+          <i class="fa-solid fa-circle-plus" style="color: #08af2a"></i>
+          <span>&nbsp;{{ feature }}</span>
         </div>
-      </div>
-
-      <div class="bottom-sheet-footer">
-        <button @click="toggleBottomSheet">닫기</button>
+        <hr class="feature-divider" />
       </div>
     </div>
 
-    <!-- 위젯이 표시될 위치 관리 -->
-    <div
-      v-for="(widget, index) in widgets"
-      :key="index"
-      class="widget"
-      :style="{ top: widget.y + 'px', left: widget.x + 'px' }"
-      @mousedown="isEditingMode && startDrag($event, index)"
-    >
-      <div class="widget-content">
-        <span>{{ widget.name }}</span>
-      </div>
+    <div class="bottom-sheet-footer">
+      <button @click="toggleBottomSheet">닫기</button>
+    </div>
+  </div>
+
+  <!-- 위젯이 표시될 위치 관리 -->
+  <div
+    v-for="(widget, index) in widgets"
+    :key="index"
+    class="widget"
+    :style="{ top: widget.y + 'px', left: widget.x + 'px' }"
+    @mousedown="isEditingMode && startDrag($event, index)"
+  >
+    <div class="widget-content">
+      <span>{{ widget.name }}</span>
     </div>
   </div>
 </template>
@@ -108,6 +106,12 @@ export default {
         y: widget.y,
       }));
       localStorage.setItem('widgetPositions', JSON.stringify(widgetPositions));
+
+      // 알림 메시지 표시
+      alert('사용자 설정이 저장되었습니다');
+
+      // /uiux 페이지로 리다이렉트
+      this.$router.push('/uiux');
     },
     toggleBottomSheet() {
       if (this.isEditingMode) {
