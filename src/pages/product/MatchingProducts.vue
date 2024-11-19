@@ -7,6 +7,7 @@ import 'swiper/swiper-bundle.css';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination, Autoplay } from 'swiper/modules';
+import Header from "@/components/Header.vue";
 
 const route = useRoute();
 const group = route.query.group || '기본 그룹';
@@ -49,6 +50,12 @@ const fetchProducts = async () => {
     loading.value = false;
   }
 };
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth', // 부드럽게 스크롤
+  });
+};
 
 const getLimitedBenefits = (benefitsString) => {
   // Split the benefits by commas
@@ -79,7 +86,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container">
+
+  <div class="main-page">
     <div v-if="loading" class="loading text-center">
       <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
         <span class="visually-hidden">Loading...</span>
@@ -149,15 +157,22 @@ onMounted(() => {
         </li>
       </ul>
       <p v-else>관련 상품이 없습니다.</p>
-    </div>
+      <button class="scroll-to-top" @click="scrollToTop">위로가기</button>
+    </div><br>
+    <br>
   </div>
 </template>
 
 <style scoped>
-.container {
-  font-family: Arial, sans-serif;
-  max-width: 360px;
-  padding: 20px 20px 100px;
+
+
+.main-page {
+  padding: 20px;
+  width: 360px;
+  height: 740px;
+  margin: 0 auto;
+  background-color: #eef4f9;
+  position: relative;
 }
 
 .loading {
@@ -231,17 +246,28 @@ h6 {
   gap: 20px; /* 리스트 아이템 간격 */
 }
 
-#kb {
-  width: 100%;
-  max-width: 70px;
-  margin-right: -10px;
-  margin-top: -5px;
-}
-
 .click{
   text-align: start;
   font-size: 10px;
   color: #7189ff;
   padding:10px;
+}
+
+.scroll-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #ffcc00;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.scroll-to-top:hover {
+  background-color: #ffaa00;
 }
 </style>

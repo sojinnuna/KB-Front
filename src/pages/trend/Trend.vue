@@ -6,8 +6,8 @@
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-    <div class="contentParents">
-      <div class="contentBox" v-if="!loading && Object.keys(topTrendingKeywords).length">
+    <div class="contentBox" v-if="!loading && Object.keys(topTrendingKeywords).length">
+      <div class="contentParents">
         <br>
         <swiper
             :pagination="{ dynamicBullets: true }"
@@ -98,8 +98,7 @@ onMounted(() => {
 
 <style scoped>
 .contentBox{
-  height: 18vh;
-  padding-top: 60px;
+  height: 14vh;
 }
 
 .loading {
@@ -115,7 +114,7 @@ onMounted(() => {
   border-radius: 20px;
   width: 100%;
   height: 100%;
-  max-width: 340px;
+  max-width: 330px;
   max-height: 85px;
   background-color: #EFEFF1;
   margin: 0 auto;
@@ -143,15 +142,8 @@ onMounted(() => {
 }
 
 
-#kb{
-  width: 100%;
-  max-width:35px;
-  margin-right: -5px;
-  margin-top: -5px;
-}
-
 .contentParents{
-  height: 100px;
-  background-color: #eef4f9;
+  height: 130px;
+  background-color: white;
 }
 </style>
