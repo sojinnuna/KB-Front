@@ -10,7 +10,7 @@
 
     <!-- 논모달 챗봇 창 -->
     <div v-if="isChatOpen" class="chat-modal">
-      <h1 class="chat-title">KB 챗봇</h1>
+      <h1 class="chat-title">💬 KB 가이드 챗봇</h1>
       <div class="chat-content">
         <!-- 챗봇 메시지 -->
         <div
@@ -51,10 +51,14 @@
             class="chat-input"
             required
           />
-          <button type="submit" class="send-button">전송</button>
+          <button type="submit" class="send-button">
+            <i class="fa-solid fa-arrow-up"></i>
+          </button>
         </form>
       </div>
-      <button @click="toggleChat" class="close-chat">닫기</button>
+      <button @click="toggleChat" class="close-chat">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
     </div>
   </div>
 </template>
@@ -144,34 +148,34 @@ export default {
 
 <style scoped>
 /* 논모달 챗봇 버튼 */
+
 .chatbot-button {
   position: fixed;
-  bottom: 120px;
-  right: 5px;
-  width: 80px;
-  height: 80px;
-  background-color: transparent;
-  border: none;
-  border-radius: 50%;
+  bottom: 120px; /* 화면 하단에서 20px 위 */
+  right: 5px; /* 화면 오른쪽에서 20px 안쪽 */
+  width: 80px; /* 버튼 크기 조정 */
+  height: 80px; /* 버튼 크기 조정 */
+  background-color: transparent; /* 배경색 제거 */
+  border: none; /* 버튼 테두리 제거 */
+  border-radius: 50%; /* 버튼을 원형으로 만듦 */
   cursor: pointer;
   z-index: 1001;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0;
+  padding: 0; /* 기본 여백 제거 */
 }
 
 .chatbot-button img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 50%;
+  width: 100%; /* 버튼 크기에 맞춰 이미지 크기 조정 */
+  height: 100%; /* 버튼 크기에 맞춰 이미지 크기 조정 */
+  object-fit: contain; /* 이미지 비율 유지 */
+  border-radius: 50%; /* 이미지도 원형으로 */
 }
-
 /* 논모달 챗봇 창 */
 .chat-modal {
   position: fixed;
-  bottom: 100px;
+  bottom: 100px; /* 챗봇 버튼 위 */
   right: 20px;
   width: 300px;
   height: 400px;
@@ -188,6 +192,7 @@ export default {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .chat-modal .chat-content {
@@ -196,9 +201,14 @@ export default {
   margin-bottom: 10px;
 }
 
+/* 입력창과 전송 버튼 하단 고정 */
 .chat-modal .chat-form {
   display: flex;
   gap: 10px;
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  padding-top: 10px;
 }
 
 .chat-input {
@@ -209,26 +219,28 @@ export default {
 }
 
 .send-button {
-  background-color: #08af2a;
+  background-color: #ffcc00;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 10px;
   border-radius: 5px;
   cursor: pointer;
 }
 
 .send-button:hover {
-  background-color: #0a9a25;
+  background-color: #ffbc00;
 }
 
 .chat-modal .close-chat {
-  background-color: #ff4d4d;
+  position: absolute;
+  top: 10px; /* 모달 상단에서 10px */
+  right: 10px; /* 모달 오른쪽에서 10px */
+  background-color: #89734c;
   color: white;
   border: none;
   border-radius: 5px;
-  padding: 10px;
+  padding: 5px 10px;
   cursor: pointer;
-  margin-top: 10px;
 }
 
 .chat-modal .close-chat:hover {
@@ -242,5 +254,36 @@ export default {
 .chat-message.user {
   text-align: right;
   color: #555;
+  margin-left: auto;
+}
+.chat-message {
+  max-width: 80%;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+  position: relative;
+}
+
+/* 유저 메시지 */
+
+/* 챗봇 메시지 */
+.chat-message.bot {
+  align-self: flex-start;
+  background-color: #f1f1f1;
+  color: #333;
+  border-radius: 0 10px 10px 10px;
+}
+
+.chat-message.bot::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -10px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 10px 10px 0;
+  border-color: transparent #f1f1f1 transparent transparent;
 }
 </style>
