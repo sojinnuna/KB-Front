@@ -5,18 +5,24 @@
     <div class="content">
       <router-view />
     </div>
+
     <Footer />
+
+    <!-- ChatBot 컴포넌트 -->
+    <ChatBot />
   </div>
 </template>
 
 <script>
 import Footer from "./components/Footer.vue";
 import Header from "./components/Header.vue";
+import ChatBot from "./components/ChatBot.vue";
 
 export default {
   components: {
     Footer,
     Header,
+    ChatBot,
   },
 };
 </script>
@@ -24,7 +30,7 @@ export default {
 <style scoped>
 .app-container {
   width: 360px;
-  height: 100vh; /* 화면 전체를 채움 */
+  height: 100px; /* 화면 전체를 채움 */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
