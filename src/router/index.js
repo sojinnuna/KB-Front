@@ -1,16 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import UIUX from '@/pages/UIUX.vue';
-import Trend from "@/pages/trend/Trend.vue";
-import Loading from "@/pages/product/Loading.vue";
-import MatchingProducts from "@/pages/product/MatchingProducts.vue";
-import Accountbook from "@/pages/account/Accountbook.vue";
-import ChatBot from "@/pages/business/ChatBot.vue";
-import CustomCommunity from "@/pages/customCommunity/CustomCommunity.vue";
-import DetailPage from "@/pages/customCommunity/DetailPage.vue";
+import Trend from '@/pages/trend/Trend.vue';
+import Loading from '@/pages/product/Loading.vue';
+import MatchingProducts from '@/pages/product/MatchingProducts.vue';
+import Accountbook from '@/pages/account/Accountbook.vue';
+import ChatBot from '@/pages/business/ChatBot.vue';
+import CustomCommunity from '@/pages/customCommunity/CustomCommunity.vue';
+import DetailPage from '@/pages/customCommunity/DetailPage.vue';
 import UiuxEdit from '@/pages/UiuxEdit.vue';
-import MatchingSavings from "@/pages/product/MatchingSavings.vue";
-import SavingLoading from "@/pages/product/SavingLoading.vue";
-
+import MatchingSavings from '@/pages/product/MatchingSavings.vue';
+import SavingLoading from '@/pages/product/SavingLoading.vue';
+import UiuxEx from '@/pages/UiuxEx.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,6 +52,11 @@ const router = createRouter({
       component: UiuxEdit,
     },
     {
+      path: '/uiuxex',
+      name: 'UiuxEx',
+      component: UiuxEx,
+    },
+    {
       path: '/accountbook',
       name: 'accountbook',
       component: Accountbook,
@@ -62,13 +67,13 @@ const router = createRouter({
       component: ChatBot,
     },
     {
-      path: "/customCommunity",
-      name: "customCommunity",
+      path: '/customCommunity',
+      name: 'customCommunity',
       component: CustomCommunity,
     },
     {
-      path: "/detailPage",
-      name: "detailPage",
+      path: '/detailPage',
+      name: 'detailPage',
       component: DetailPage,
     },
   ],
