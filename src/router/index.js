@@ -8,6 +8,8 @@ import ChatBot from "@/pages/business/ChatBot.vue";
 import CustomCommunity from "@/pages/customCommunity/CustomCommunity.vue";
 import DetailPage from "@/pages/customCommunity/DetailPage.vue";
 import UiuxEdit from '@/pages/UiuxEdit.vue';
+import MatchingSavings from "@/pages/product/MatchingSavings.vue";
+import SavingLoading from "@/pages/product/SavingLoading.vue";
 
 
 const router = createRouter({
@@ -25,9 +27,19 @@ const router = createRouter({
       component: Loading,
     },
     {
+      path: '/savingLoading',
+      name: 'savingLoading',
+      component: SavingLoading,
+    },
+    {
       path: '/matchingProducts',
       name: 'matchingProducts',
       component: MatchingProducts,
+    },
+    {
+      path: '/matchingSavings',
+      name: 'matchingSavings',
+      component: MatchingSavings,
     },
     {
       path: '/uiux',
