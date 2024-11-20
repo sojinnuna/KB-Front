@@ -10,7 +10,11 @@
 
     <!-- 논모달 챗봇 창 -->
     <div v-if="isChatOpen" class="chat-modal">
+<<<<<<< HEAD
       <h1 class="chat-title">💬 KB 가이드 챗봇</h1>
+=======
+      <h1 class="chat-title">KB 챗봇</h1>
+>>>>>>> b0ed5c15ece4a95dd03cfcd70075c8a23613f479
       <div class="chat-content">
         <!-- 챗봇 메시지 -->
         <div
