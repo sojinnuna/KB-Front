@@ -44,12 +44,8 @@
 </template>
 
 <script setup>
-<<<<<<< HEAD
-import { ref } from "vue";
-import { useRoute } from "vue-router";
-=======
+import { ref } from 'vue';
 import { useRoute } from 'vue-router';
->>>>>>> b0ed5c15ece4a95dd03cfcd70075c8a23613f479
 
 const isChatOpen = ref(false);
 
@@ -60,15 +56,6 @@ const toggleChat = () => {
 const route = useRoute();
 
 const isActive = (path) => {
-<<<<<<< HEAD
-  if (path === "trend") {
-    return (
-      route.path === "/trend" ||
-      (route.path === "/matchingProducts" &&
-        route.query.group &&
-        route.query.keyword) ||
-      (route.path === "/loading" && route.query.group && route.query.keyword)
-=======
   // 'trend' 경로가 활성화되는 조건
   if (path === 'trend') {
     return (
@@ -77,7 +64,6 @@ const isActive = (path) => {
         route.query.group &&
         route.query.keyword) || // /matchingProducts에서 group과 keyword가 있을 때
       (route.path === '/loading' && route.query.group && route.query.keyword) // /loading에서 group과 keyword가 있을 때
->>>>>>> b0ed5c15ece4a95dd03cfcd70075c8a23613f479
     );
   }
   return route.path === path;
