@@ -7,8 +7,15 @@
 
     <!-- 논모달 챗봇 창 -->
     <div v-if="isChatOpen" class="chat-modal">
-      <h1 class="chat-title">💬 KB 가이드 챗봇</h1>
-      <div class="chat-content">
+      <!-- 헤더 -->
+      <div class="chat-header">
+        <h1 class="chat-title">💬 KB 가이드 챗봇</h1>
+        <button @click="toggleChat" class="close-chat">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <!-- 대화 내용 -->
+      <div class="chat-content" ref="chatContent">
         <!-- 챗봇 메시지 -->
         <div
           v-for="(message, index) in messages"
@@ -40,22 +47,22 @@
             </div>
           </div>
         </div>
-        <!-- 입력 폼 -->
+      </div>
+
+      <!-- 풋터 입력 폼 -->
+      <div class="chat-footer">
         <form @submit.prevent="sendMessage" class="chat-form">
           <input
             v-model="inputText"
-            placeholder="메시지를 입력하세요"
+            placeholder="메시지를 입력하세요..."
             class="chat-input"
             required
           />
           <button type="submit" class="send-button">
-            <i class="fa-solid fa-arrow-up"></i>
+            <i class="fa-solid fa-paper-plane"></i>
           </button>
         </form>
       </div>
-      <button @click="toggleChat" class="close-chat">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
     </div>
   </div>
 </template>
@@ -144,8 +151,12 @@ export default {
 </script>
 
 <style scoped>
+.video-iframe {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+}
 /* 논모달 챗봇 버튼 */
-
 .chatbot-button {
   position: fixed;
   bottom: 120px; /* 화면 하단에서 20px 위 */
@@ -175,37 +186,67 @@ export default {
   bottom: 100px; /* 챗봇 버튼 위 */
   right: 20px;
   width: 300px;
-  height: 400px;
+  height: 500px;
   background-color: white;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   z-index: 1001;
   display: flex;
   flex-direction: column;
-  padding: 15px;
+  padding: 0;
+}
+
+/* 헤더 */
+.chat-header {
+  background-color: #fed100;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .chat-modal .chat-title {
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 10px;
-  text-align: center;
+}
+
+.chat-modal .close-chat {
+  background-color: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.chat-modal .close-chat:hover {
+  color: #d33;
 }
 
 .chat-modal .chat-content {
   flex: 1;
   overflow-y: auto;
-  margin-bottom: 10px;
+  padding: 15px;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+/* 풋터 */
+.chat-footer {
+  background-color: #fff8e1;
+  padding: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  display: flex;
+  align-items: center;
 }
 
 /* 입력창과 전송 버튼 하단 고정 */
 .chat-modal .chat-form {
   display: flex;
+  flex: 1;
   gap: 10px;
-  position: sticky;
-  bottom: 0;
-  background-color: white;
-  padding-top: 10px;
 }
 
 .chat-input {
@@ -228,22 +269,6 @@ export default {
   background-color: #ffbc00;
 }
 
-.chat-modal .close-chat {
-  position: absolute;
-  top: 10px; /* 모달 상단에서 10px */
-  right: 10px; /* 모달 오른쪽에서 10px */
-  background-color: #89734c;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-}
-
-.chat-modal .close-chat:hover {
-  background-color: #d33;
-}
-
 .chat-message {
   margin-bottom: 10px;
 }
@@ -252,26 +277,30 @@ export default {
   text-align: right;
   color: #555;
   margin-left: auto;
-}
-.chat-message {
-  max-width: 80%;
-  padding: 10px;
-  border-radius: 10px;
-  font-size: 14px;
-  line-height: 1.4;
-  position: relative;
+  background-color: #add8e6;
+  border-radius: 10px 0 10px 10px;
+  max-width: fit-content;
 }
 
-/* 유저 메시지 */
-
-/* 챗봇 메시지 */
 .chat-message.bot {
   align-self: flex-start;
   background-color: #f1f1f1;
   color: #333;
   border-radius: 0 10px 10px 10px;
+  max-width: fit-content;
 }
 
+.chat-message {
+  max-width: 80%;
+  padding: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+  position: relative;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+/* 챗봇 메시지 */
 .chat-message.bot::after {
   content: "";
   position: absolute;
