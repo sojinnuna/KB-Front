@@ -1,39 +1,104 @@
 <template>
   <div class="bc">
     <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
-    <div v-if="loading" class="loading text-center">
-      <div class="spinner-grow" style="width: 3rem; height: 3rem" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
+    <div>
+      <input
+        class="d-inline search"
+        type="text"
+        placeholder="금융상품을 검색해보세요"
+        v-model="searchQuery"
+      />
+      <button class="searchBtn" @click="handleSearch">
+        <i class="d-inline bi bi-search"></i>
+      </button>
     </div>
-    <div
-      class="contentBox"
-      v-if="!loading && Object.keys(topTrendingKeywords).length"
-    >
-      <div class="contentParents">
-        <br />
-        <swiper
-          :pagination="{ dynamicBullets: true }"
-          :modules="[Pagination, Autoplay]"
-          class="mySwipe trendBox"
-          :loop="true"
-          :autoplay="{ delay: 3000, disableOnInteraction: false }"
+    <div class="box">
+      <h3>카드</h3>
+      <div v-if="loading" class="loading text-center">
+        <div
+          class="spinner-grow"
+          style="width: 3rem; height: 3rem"
+          role="status"
         >
-          <swiper-slide
-            v-for="(keyword, group) in topTrendingKeywords"
-            :key="group"
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      <div
+        class="contentBox"
+        v-if="!loading && Object.keys(topTrendingKeywords).length"
+      >
+        <div class="contentParents">
+          <swiper
+            :pagination="{ dynamicBullets: true }"
+            :modules="[Pagination, Autoplay]"
+            class="mySwipe trendBox"
+            :loop="true"
+            :autoplay="{ delay: 3000, disableOnInteraction: false }"
           >
-            <div class="content" @click="navigateToLoading(group, keyword)">
-              <div class="fin">
-                지금 트렌드는 <strong>[{{ keyword }}]</strong><br />
-                {{ group }}에 어울리는 KB금융상품은?
+            <swiper-slide
+              v-for="(keyword, group) in topTrendingKeywords"
+              :key="group"
+            >
+              <div class="content" @click="navigateToLoading(group, keyword)">
+                <div class="fin">
+                  <strong>
+                    지금 트렌드는 [{{ keyword }}]<br />
+                    {{ group }}엔 KB 카드상품!</strong
+                  >
+                </div>
+                <div class="emoji">
+                  <img class="ThreedEmoji" :src="getEmoji(group)" alt="emoji" />
+                </div>
               </div>
-              <div class="emoji">
-                <img class="ThreedEmoji" :src="getEmoji(group)" alt="emoji" />
+            </swiper-slide>
+          </swiper>
+        </div>
+      </div>
+      <br /><br />
+
+      <h3>예적금</h3>
+      <div v-if="loading" class="loading text-center">
+        <div
+          class="spinner-grow"
+          style="width: 3rem; height: 3rem"
+          role="status"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      <div
+        class="contentBox"
+        v-if="!loading && Object.keys(topSavingsKeywords).length"
+      >
+        <div class="contentParents">
+          <swiper
+            :pagination="{ dynamicBullets: true }"
+            :modules="[Pagination, Autoplay]"
+            class="mySwipe trendBox"
+            :loop="true"
+            :autoplay="{ delay: 3000, disableOnInteraction: false }"
+          >
+            <swiper-slide
+              v-for="(keyword, group) in topSavingsKeywords"
+              :key="group"
+            >
+              <div
+                class="content"
+                @click="navigateToSavingLoading(group, keyword)"
+              >
+                <div class="fin">
+                  <strong>
+                    지금 트렌드는 [{{ keyword }}]<br />
+                    {{ group }}엔 KB 예적금상품!</strong
+                  >
+                </div>
+                <div class="emoji">
+                  <img class="ThreedEmoji" :src="getEmoji(group)" alt="emoji" />
+                </div>
               </div>
-            </div>
-          </swiper-slide>
-        </swiper>
+            </swiper-slide>
+          </swiper>
+        </div>
       </div>
     </div>
   </div>
@@ -48,13 +113,26 @@ import "swiper/swiper-bundle.css";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination, Autoplay } from "swiper/modules";
-
+const searchQuery = ref("");
 const router = useRouter();
 const topTrendingKeywords = ref({});
 const topSavingsKeywords = ref({});
 const newsMap = ref({});
+const savingNewsMap = ref({});
 const errorMessage = ref("");
 const loading = ref(false);
+
+const handleSearch = () => {
+  if (searchQuery.value.trim() === "") {
+    alert("검색어를 입력해주세요.");
+    return;
+  }
+
+  router.push({
+    path: "/searchResult",
+    query: { query: searchQuery.value.trim() },
+  });
+};
 
 const fetchTopTrendNews = async () => {
   loading.value = true;
@@ -119,6 +197,15 @@ const getEmoji = (group) => {
     건강: "/images/stethoscope_3d.png",
     교육: "/images/books_3d.png",
     기술: "/images/mobile_phone_3d.png",
+    어린이: "/images/child_3d_light.png",
+    청소년: "/images/child_3d_light.png",
+    미래: "/images/rocket_3d.png",
+    노랑풍선: "/images/balloon_3d.png",
+    할인쿠폰: "/images/roll_of_paper_3d.png",
+    직장인: "/images/office_worker_3d_default.png",
+    목돈: "/images/money_with_wings_3d.png",
+    사회초년생: "/images/woman_3d_default.png",
+    재테크: "/images/bank_3d.png",
   };
   return emojiMap[group] || "😁";
 };
@@ -130,8 +217,16 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.searchBtn {
+  border: none;
+  background-color: transparent;
+}
+.box {
+  padding: 20px;
+  height: 500px;
+}
 .contentBox {
-  height: 14vh;
+  height: 20vh;
 }
 
 .loading {
@@ -143,12 +238,12 @@ onMounted(() => {
   color: red;
 }
 .trendBox {
-  font-size: 16px;
+  font-size: 15px;
   border-radius: 20px;
   width: 100%;
   height: 100%;
-  max-width: 330px;
-  max-height: 85px;
+  max-width: 340px;
+  max-height: 185px;
   background-color: #efeff1;
   margin: 0 auto;
 }
@@ -158,7 +253,8 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 25px;
+  margin-top: 10px;
+  padding: 30px;
   cursor: pointer;
 }
 
@@ -171,11 +267,30 @@ onMounted(() => {
 }
 
 .ThreedEmoji {
-  width: 30px;
+  width: 50px;
 }
 
 .contentParents {
-  height: 130px;
-  background-color: white;
+  height: 135px;
+}
+.mySwipe {
+  --swiper-theme-color: #ffaa00;
+}
+.searchBtn .bi {
+  font-size: 30px;
+  margin-left: -30px;
+}
+.bc {
+  top: 43px;
+  position: relative;
+}
+.search {
+  width: 250px;
+  margin: 30px;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  border-bottom-width: thin;
+  background-color: rgba(238, 244, 249, 1);
 }
 </style>

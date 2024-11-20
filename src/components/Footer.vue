@@ -56,13 +56,14 @@ const toggleChat = () => {
 const route = useRoute();
 
 const isActive = (path) => {
+  // 'trend' 경로가 활성화되는 조건
   if (path === "trend") {
     return (
-      route.path === "/trend" ||
+      route.path === "/trend" || // 경로가 /trend일 때
       (route.path === "/matchingProducts" &&
         route.query.group &&
-        route.query.keyword) ||
-      (route.path === "/loading" && route.query.group && route.query.keyword)
+        route.query.keyword) || // /matchingProducts에서 group과 keyword가 있을 때
+      (route.path === "/loading" && route.query.group && route.query.keyword) // /loading에서 group과 keyword가 있을 때
     );
   }
   return route.path === path;

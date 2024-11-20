@@ -13,6 +13,7 @@
 import Footer from "./components/Footer.vue";
 import Header from "./components/Header.vue";
 import ChatBot from "./components/ChatBot.vue";
+
 export default {
   components: {
     Footer,
@@ -53,8 +54,8 @@ footer {
 
 .content {
   flex: 1;
-  margin-bottom: 110px;
-  overflow-y: auto;
+  margin-bottom: 110px; /* 푸터 높이 만큼 여백 */
+  overflow-y: auto; /* 스크롤 가능 */
   box-sizing: border-box;
 }
 </style>

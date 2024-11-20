@@ -2,10 +2,7 @@
   <div>
     <!-- 논모달 챗봇 버튼 -->
     <button class="chatbot-button" @click="toggleChat">
-      <img
-        src="C:\Marts\KBITSME_F\public\images\rabbit.png"
-        alt="Chatbot Icon"
-      />
+      <img src="/images/rabbit.png" alt="Chatbot Icon" />
     </button>
 
     <!-- 논모달 챗봇 창 -->
