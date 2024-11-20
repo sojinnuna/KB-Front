@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- 논모달 챗봇 버튼 -->
     <button class="chatbot-button" @click="toggleChat">
       <img src="/images/rabbit.png" alt="Chatbot Icon" />
     </button>
