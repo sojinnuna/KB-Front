@@ -25,6 +25,7 @@
 <script>
 export default {
   name: 'UiUx',
+
   data() {
     return {
       isBottomSheetVisible: false,
@@ -58,23 +59,13 @@ export default {
     const storedWidgetPositions = localStorage.getItem('widgetPositions');
     if (storedWidgetPositions) {
       this.widgets = JSON.parse(storedWidgetPositions);
-    } else {
-      // 기본 위젯 데이터 초기화
-      this.initializeWidgets();
     }
   },
   methods: {
     navigateToUiuxEdit() {
       this.$router.push('/uiuxedit'); // /uiuxedit 페이지로 이동
     },
-    initializeWidgets() {
-      // 기본 위젯 초기값
-      this.widgets = this.features.map((feature, index) => ({
-        name: feature,
-        x: (index % this.gridSize.x) * this.gridSpacingX,
-        y: Math.floor(index / this.gridSize.x) * this.gridSpacingY,
-      }));
-    },
+
     onDragStart(index, event) {
       this.isDragging = true;
       this.dragIndex = index;
@@ -150,5 +141,12 @@ export default {
   font-size: 40px;
   font-weight: bolder;
   color: rgb(0, 0, 0);
+}
+.widgets-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: center;
 }
 </style>
