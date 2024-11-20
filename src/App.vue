@@ -10,9 +10,9 @@
 </template>
 
 <script>
-import Footer from './components/Footer.vue';
-import Header from './components/Header.vue';
-import ChatBot from './components/ChatBot.vue';
+import Footer from "./components/Footer.vue";
+import Header from "./components/Header.vue";
+import ChatBot from "./components/ChatBot.vue";
 
 export default {
   components: {
