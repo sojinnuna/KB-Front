@@ -1,5 +1,9 @@
 <template>
   <div class="main-page">
+    <Account />
+    <Exchange />
+    <Transfer class="transfer-widget" />
+    <!-- Transfer에 클래스 추가 -->
     <!-- 새로운 상자 -->
     <div class="plus-box2" @click="saveWidgetPositions">
       <span class="plus-sign">저장하기</span>
@@ -52,12 +56,6 @@
         <button @click="toggleBottomSheet">닫기</button>
       </div>
     </div>
-    <!-- 위젯 리스트 (사용자가 선택한 옵션들) -->
-    <div class="widget-container">
-      <div class="widget-item" v-for="(widget, index) in widgets" :key="index">
-        <span>{{ widget }}</span>
-      </div>
-    </div>
 
     <!-- 위젯이 표시될 위치 관리 -->
     <div
@@ -82,9 +80,17 @@
 </template>
 
 <script>
+import Account from '@/components/features/Account.vue';
+import Exchange from '@/components/features/Exchange.vue';
+import Transfer from '@/components/features/Transfer.vue';
+
 export default {
   name: 'UiuxEdit',
-  components: {},
+  components: {
+    Account,
+    Exchange,
+    Transfer,
+  },
   data() {
     return {
       isBottomSheetVisible: false,
@@ -134,6 +140,9 @@ export default {
         zindex: 1,
         draggable: this.isEditingMode, // 편집 모드일 때만 드래그 가능
       };
+      console.log(option);
+      this.widgets.push(widget);
+      this.isBottomSheetVisible = false; // 바텀 시트 숨기기
     },
     // 위젯 삭제 메서드
     deleteWidget(index) {
@@ -357,6 +366,13 @@ export default {
   margin-top: 60px;
   background-color: #eef4f9;
   position: relative;
+  display: flex;
+  flex-direction: column; /* 세로 방향으로 정렬 */
+}
+.transfer-widget {
+  position: absolute;
+  bottom: 10px; /* 화면 하단에서 10px */
+  left: 10px; /* 화면 왼쪽에서 10px */
 }
 .dropdown {
   width: 100%;
