@@ -49,18 +49,23 @@
 
 <script>
 import axios from "axios";
+import { useChatStore } from "@/stores/chat";
 
 export default {
   data() {
     return {
-      question: "",
-      messages: [], // 대화 메시지 저장
+      question: "", // 현재 입력 중인 질문
     };
+  },
+  computed: {
+    messages() {
+      return this.chatStore.messages; // 스토어에서 메시지 가져오기
+    },
   },
   methods: {
     async askQuestion() {
       // 유저 메시지 추가
-      this.messages.push({ type: "user", text: this.question });
+      this.chatStore.addMessage({ type: "user", text: this.question });
 
       try {
         const result = await axios.post(
@@ -82,7 +87,7 @@ export default {
         if (videoMatch) {
           const videoId = videoMatch[1];
 
-          this.messages.push({
+          this.chatStore.addMessage({
             type: "bot",
             text: responseText.split("URL:")[0].trim(),
             isVideo: true,
@@ -90,7 +95,7 @@ export default {
           });
         } else {
           // 일반 텍스트 응답 처리
-          this.messages.push({
+          this.chatStore.addMessage({
             type: "bot",
             text: responseText,
             isVideo: false,
@@ -98,7 +103,7 @@ export default {
         }
       } catch (error) {
         console.error("Error:", error);
-        this.messages.push({
+        this.chatStore.addMessage({
           type: "bot",
           text: "질문을 처리하는 중 오류가 발생했습니다.",
           isVideo: false,
@@ -107,6 +112,9 @@ export default {
         this.question = ""; // 입력 창 초기화
       }
     },
+  },
+  created() {
+    this.chatStore = useChatStore(); // Pinia 스토어 사용
   },
 };
 </script>

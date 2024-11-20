@@ -1,51 +1,60 @@
 <template>
-  <div class="navbar">
-    <router-link to="/" class="nav-item home" exact-active-class="active">
-      <i class="fa-solid fa-file-invoice"></i>
-      <span>전체계좌</span>
-    </router-link>
-    <router-link
-      to="/trend"
-      class="nav-item my-assets"
-      :class="{ active: isActive('trend') }"
-    >
-      <i class="fa-solid fa-bag-shopping"></i>
-      <span>금융상품</span>
-    </router-link>
+  <div>
+    <!-- 네비게이션 바 -->
+    <div class="navbar">
+      <router-link to="/" class="nav-item home" exact-active-class="active">
+        <i class="fa-solid fa-file-invoice"></i>
+        <span>전체계좌</span>
+      </router-link>
+      <router-link
+        to="/trend"
+        class="nav-item my-assets"
+        :class="{ active: isActive('trend') }"
+      >
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span>금융상품</span>
+      </router-link>
+      <router-link
+        to="/accountbook"
+        class="nav-item account-book"
+        exact-active-class="active"
+      >
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>자산관리</span>
+      </router-link>
+      <router-link
+        to="/accountbook"
+        class="nav-item account-book"
+        exact-active-class="active"
+      >
+        <i class="fa-solid fa-gift"></i>
+        <span>혜택</span>
+      </router-link>
+    </div>
 
-    <router-link
-      to="/accountbook"
-      class="nav-item account-book"
-      exact-active-class="active"
-    >
-      <i class="fa-solid fa-chart-pie"></i>
-      <span>자산관리</span>
-    </router-link>
-    <router-link
-      to="/accountbook"
-      class="nav-item account-book"
-      exact-active-class="active"
-    >
-      <i class="fa-solid fa-gift"></i>
-      <span>혜택</span>
-    </router-link>
-    <router-link
-      to="/chatbot"
-      class="nav-item business-card"
-      exact-active-class="active"
-    >
-      <i class="fa-solid fa-mobile-retro"></i>
-      <span>챗봇</span>
-    </router-link>
+    <!-- 논모달 챗봇 창 -->
+    <div v-if="isChatOpen" class="chat-modal">
+      <h1 class="chat-title">KB 챗봇</h1>
+      <div class="chat-content">
+        <p>챗봇 창 내용이 여기에 표시됩니다.</p>
+        <button @click="toggleChat" class="close-chat">닫기</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { useRoute } from 'vue-router';
+
+const isChatOpen = ref(false);
+
+const toggleChat = () => {
+  isChatOpen.value = !isChatOpen.value; // 상태 변경
+};
 
 const route = useRoute();
 
-// 현재 경로가 /trend, /loading, /matchingProducts일 때 활성화 상태 적용
 const isActive = (path) => {
   // 'trend' 경로가 활성화되는 조건
   if (path === 'trend') {
@@ -57,7 +66,6 @@ const isActive = (path) => {
       (route.path === '/loading' && route.query.group && route.query.keyword) // /loading에서 group과 keyword가 있을 때
     );
   }
-  // 다른 경로가 활성화되는 조건
   return route.path === path;
 };
 </script>
@@ -157,5 +165,45 @@ span {
 .nav-item:nth-child(4),
 .nav-item:nth-child(2) {
   flex-grow: 1;
+}
+
+/* 논모달 챗봇 창 */
+.chat-modal {
+  position: fixed;
+  bottom: 150px;
+  right: 20px;
+  width: 300px;
+  height: 400px;
+  background-color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+}
+
+.chat-modal .chat-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.chat-modal .chat-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.chat-modal .close-chat {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.chat-modal .close-chat:hover {
+  background-color: #d33;
 }
 </style>

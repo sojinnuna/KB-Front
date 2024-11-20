@@ -2,15 +2,12 @@
   <div>
     <!-- 논모달 챗봇 버튼 -->
     <button class="chatbot-button" @click="toggleChat">
-      <img
-        src="C:/Marts/KBITSME_F/src/assets/images/rabbit.png"
-        alt="Chatbot Icon"
-      />
+      <img src="/images/rabbit.png" alt="Chatbot Icon" />
     </button>
 
     <!-- 논모달 챗봇 창 -->
     <div v-if="isChatOpen" class="chat-modal">
-      <h1 class="chat-title">KB 챗봇</h1>
+      <h1 class="chat-title">💬 KB 가이드 챗봇</h1>
       <div class="chat-content">
         <!-- 챗봇 메시지 -->
         <div
@@ -64,15 +61,15 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
-import axios from "axios";
-import { useChatStore } from "@/stores/chat";
+import { ref, computed } from 'vue';
+import axios from 'axios';
+import { useChatStore } from '@/stores/chat';
 
 export default {
-  name: "Chatbot",
+  name: 'Chatbot',
   setup() {
     const isChatOpen = ref(false); // 챗봇 창 열기/닫기 상태
-    const inputText = ref(""); // 현재 입력 중인 질문
+    const inputText = ref(''); // 현재 입력 중인 질문
     const chatStore = useChatStore(); // Pinia 스토어
 
     // 스토어에서 메시지 가져오기
@@ -87,11 +84,11 @@ export default {
     const sendMessage = async () => {
       if (inputText.value.trim()) {
         // 사용자 메시지 추가
-        chatStore.addMessage({ type: "user", text: inputText.value });
+        chatStore.addMessage({ type: 'user', text: inputText.value });
 
         try {
           const result = await axios.post(
-            "http://localhost:8080/chatbot/ask",
+            'http://localhost:8080/chatbot/ask',
             null,
             {
               params: {
@@ -110,28 +107,28 @@ export default {
           if (videoMatch) {
             const videoId = videoMatch[1];
             chatStore.addMessage({
-              type: "bot",
-              text: responseText.split("URL:")[0].trim(),
+              type: 'bot',
+              text: responseText.split('URL:')[0].trim(),
               isVideo: true,
               videoId,
             });
           } else {
             chatStore.addMessage({
-              type: "bot",
+              type: 'bot',
               text: responseText,
               isVideo: false,
             });
           }
         } catch (error) {
-          console.error("Error:", error);
+          console.error('Error:', error);
           chatStore.addMessage({
-            type: "bot",
-            text: "질문을 처리하는 중 오류가 발생했습니다.",
+            type: 'bot',
+            text: '질문을 처리하는 중 오류가 발생했습니다.',
             isVideo: false,
           });
         }
 
-        inputText.value = ""; // 입력 초기화
+        inputText.value = ''; // 입력 초기화
       }
     };
 
@@ -276,7 +273,7 @@ export default {
 }
 
 .chat-message.bot::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: -10px;

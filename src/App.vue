@@ -5,16 +5,19 @@
       <router-view />
     </main>
     <Footer />
+    <ChatBot />
   </div>
 </template>
 
 <script>
 import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
+import ChatBot from './components/ChatBot.vue';
 
 export default {
   components: {
     Footer,
+    ChatBot,
     Header,
   },
 };
@@ -23,7 +26,7 @@ export default {
 <style scoped>
 .app-container {
   width: 360px;
-  height: 100vh; /* 화면 전체를 채움 */
+  height: 100vh;
   max-height: 800px;
   margin: 0 auto;
   display: flex;
@@ -33,25 +36,22 @@ export default {
   background-color: rgba(238, 244, 249, 1);
 }
 
-/* 헤더 고정 */
 header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000; /* 헤더가 콘텐츠 위에 오도록 설정 */
+  z-index: 1000;
 }
 
-/* 푸터 고정 */
 footer {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  z-index: 1000; /* 푸터가 콘텐츠 위에 오도록 설정 */
+  z-index: 1000;
 }
 
-/* 콘텐츠 영역 */
 .content {
   flex: 1;
   margin-bottom: 110px; /* 푸터 높이 만큼 여백 */
