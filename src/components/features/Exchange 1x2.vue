@@ -32,11 +32,13 @@ export default {
     };
   },
   methods: {
-    async fetchExchangeRate() {
+    async fetchExchangeRate(countryCode = "USD") {
       try {
-        // Java 백엔드 API 호출
-        const response = await axios.get("/api/exchange-rate");
-        this.exchangeRate = response.data; // 환율 데이터를 상태에 저장
+        const url = `/api/exchange-rate?currency=${countryCode}`;
+        console.log("Requesting URL:", url); // 요청 URL 확인
+        const response = await axios.get(url);
+        console.log("API Response:", response.data); // 응답 데이터 확인
+        this.exchangeRate = response.data.exchangeRate;
       } catch (error) {
         console.error("환율 정보를 가져오는 중 오류 발생:", error);
         this.exchangeRate = null; // 오류 시 기본값 설정
