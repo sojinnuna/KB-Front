@@ -1,8 +1,6 @@
 <template>
   <div class="exchange-rate-widget">
-    <div class="logo-container">
-      <img src="/images/kb-logo.png" alt="국민은행 로고" class="logo" />
-    </div>
+    <div class="logo-container"></div>
 
     <div class="currency-info">
       <img

@@ -57,17 +57,17 @@ export default {
       isModalOpen: false, // 모달 열림 상태
       countries: [
         {
-          name: "미국 USD",
+          name: "USD",
           code: "USD",
           flag: "https://flagcdn.com/us.svg",
         },
         {
-          name: "일본 JPY",
+          name: "JPY",
           code: "JPY",
           flag: "https://flagcdn.com/jp.svg",
         },
         {
-          name: "유럽 EUR",
+          name: "EUR",
           code: "EUR",
           flag: "https://flagcdn.com/eu.svg",
         },
