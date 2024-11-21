@@ -8,26 +8,26 @@
       <div class="input-group">
         <label for="recipient">송금할 계좌 입력</label>
         <input
-          type="number"
-          v-model="recipient"
-          id="recipient"
-          placeholder="계좌번호를 입력하세요"
+            type="number"
+            v-model="recipient"
+            id="recipient"
+            placeholder="계좌번호를 입력하세요"
         />
       </div>
 
       <!-- 보낼 금액 입력 위치를 위로 이동 -->
       <div class="input-group">
-        <label for="amount">보낼 금액</label>
+        <label for="balance">보낼 금액</label>
         <input
-          type="number"
-          v-model="amount"
-          id="amount"
-          placeholder="금액을 입력하세요"
+            type="number"
+            v-model="balance"
+            id="balance"
+            placeholder="금액을 입력하세요"
         />
       </div>
 
       <div class="button-group">
-        <button @click="sendMoney" :disabled="!amount || !recipient">
+        <button @click="sendMoney" :disabled="!balance || !recipient">
           송금하기
         </button>
       </div>
@@ -40,13 +40,9 @@ export default {
   name: 'RemittanceWidget',
   data() {
     return {
-      amount: '', // 송금 금액
-      recipient: '', // 수신자
-      recipients: [
-        { name: '홍길동', account: '123-456-789' },
-        { name: '김철수', account: '987-654-321' },
-        { name: '이영희', account: '111-222-333' },
-      ], // 수신자 목록
+      balance: '', // 송금 금액
+      recipient: '', // 수신자 계좌번호
+      senderAccountNumber: '33333322111111', // 송금하는 계좌번호 (예시, 실제로는 로그인한 사용자 계좌로 설정)
       widgetStyle: {
         width: '340px', // 2배 가로 크기 (기준 90px * 2)
         height: '196.25px', // 2배 세로 크기 (기준 98.125px * 2)
@@ -54,14 +50,36 @@ export default {
     };
   },
   methods: {
-    sendMoney() {
-      if (this.amount && this.recipient) {
-        alert(
-          `송금이 완료되었습니다!\n금액: ${this.amount}원\n수신자: ${this.recipient}`
-        );
-        // 송금 로직 구현
-        this.amount = '';
-        this.recipient = '';
+    async sendMoney() {
+      if (this.balance && this.recipient) {
+        try {
+          const accountDTO = {
+            senderAccountNumber: this.senderAccountNumber, // 송금하는 계좌번호
+            receiverAccountNumber: this.recipient, // 수신자 계좌번호
+            balance: this.balance, // 송금 금액
+          };
+
+          const response = await fetch('http://localhost:8080/api/account/transfer', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(accountDTO),
+          });
+
+          if (!response.ok) {
+            throw new Error('송금 실패: ' + response.statusText);
+          }
+
+          const data = await response.json();
+          alert(`송금이 완료되었습니다!\n금액: ${this.balance}원`);
+
+          // 송금 후 입력 필드 초기화
+          this.balance = '';
+          this.recipient = '';
+        } catch (error) {
+          alert(error.message);
+        }
       } else {
         alert('모든 항목을 입력해주세요!');
       }
@@ -69,6 +87,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .remittance-widget {
