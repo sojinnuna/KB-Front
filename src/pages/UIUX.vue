@@ -19,15 +19,16 @@
 </template>
 
 <script>
-import { getCustomPage, saveCustomPage } from "../api/customAPI";
-import Account1x1 from "../components/features/Account 1x1.vue";
-import Account1x2 from "../components/features/Account 1x2.vue";
-import Account2x4 from "../components/features/Account 2x4.vue";
-import Exchange1x1 from "../components/features/Exchange 1x1.vue";
-import Exchange1x2 from "../components/features/Exchange 1x2.vue";
-import Exchange2x2 from "../components/features/Exchange 2x2.vue";
+import { getCustomPage, saveCustomPage } from '../api/customAPI';
+import Account1x1 from '../components/features/Account 1x1.vue';
+import Account1x2 from '../components/features/Account 1x2.vue';
+import Account2x4 from '../components/features/Account 2x4.vue';
+import Exchange1x1 from '../components/features/Exchange 1x1.vue';
+import Exchange1x2 from '../components/features/Exchange 1x2.vue';
+import Exchange2x2 from '../components/features/Exchange 2x2.vue';
+import Game1x1 from '../components/features/game1x1.vue';
 export default {
-  name: "UiUx",
+  name: 'UiUx',
   components: {
     Account1x1,
     Account1x2,
@@ -35,6 +36,7 @@ export default {
     Exchange1x1,
     Exchange1x2,
     Exchange2x2,
+    Game1x1,
   },
   data() {
     return {
@@ -44,22 +46,27 @@ export default {
       widgets: [], // 위젯 목록
       features: [
         {
-          name: "계좌 조회",
+          name: '계좌 조회',
           isDropdownOpen: false,
           options: [
-            { id: "1", displayName: "1x1", component: "Account1x1" },
-            { id: "2", displayName: "1x2", component: "Account1x2" },
-            { id: "3", displayName: "2x4", component: "Account2x4" },
+            { id: '1', displayName: '1x1', component: 'Account1x1' },
+            { id: '2', displayName: '1x2', component: 'Account1x2' },
+            { id: '3', displayName: '2x4', component: 'Account2x4' },
           ],
         },
         {
-          name: "환율 조회",
+          name: '환율 조회',
           isDropdownOpen: false,
           options: [
-            { id: "4", displayName: "1x1", component: "Exchange1x1" },
-            { id: "5", displayName: "1x2", component: "Exchange1x2" },
-            { id: "6", displayName: "2x2", component: "Exchange2x2" },
+            { id: '4', displayName: '1x1', component: 'Exchange1x1' },
+            { id: '5', displayName: '1x2', component: 'Exchange1x2' },
+            { id: '6', displayName: '2x2', component: 'Exchange2x2' },
           ],
+        },
+        {
+          name: '참참참 게임',
+          isDropdownOpen: false,
+          options: [{ id: '7', displayName: '1x1', component: 'Game1x1' }],
         },
       ], // 기능 목록
       dragIndex: null, // 현재 드래그 중인 위젯 인덱스
@@ -77,11 +84,11 @@ export default {
   },
   methods: {
     navigateToUiuxEdit() {
-      this.$router.push("/uiuxedit"); // /uiuxedit 페이지로 이동
+      this.$router.push('/uiuxedit'); // /uiuxedit 페이지로 이동
     },
 
     async initSavedPage() {
-      const userDataString = localStorage.getItem("user");
+      const userDataString = localStorage.getItem('user');
       const userData = JSON.parse(userDataString);
       const userNum = userData.userNum;
 
@@ -90,9 +97,9 @@ export default {
       console.log(saveCustomPage);
 
       if (saveCustomPage) {
-        localStorage.setItem("customPageData", JSON.stringify(saveCustomPage));
+        localStorage.setItem('customPageData', JSON.stringify(saveCustomPage));
 
-        const pageData = JSON.parse(localStorage.getItem("customPageData"));
+        const pageData = JSON.parse(localStorage.getItem('customPageData'));
         this.widgets = pageData.layoutData;
       }
     },
