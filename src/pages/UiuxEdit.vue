@@ -74,18 +74,19 @@
 </template>
 
 <script>
-import html2canvas from "html2canvas";
-import axios from "axios";
-import { getCustomPage, saveCustomPage } from "../api/customAPI";
-import Account1x1 from "../components/features/Account 1x1.vue";
-import Account1x2 from "../components/features/Account 1x2.vue";
-import Account2x4 from "../components/features/Account 2x4.vue";
-import Exchange1x1 from "../components/features/Exchange 1x1.vue";
-import Exchange1x2 from "../components/features/Exchange 1x2.vue";
-import Exchange2x2 from "../components/features/Exchange 2x2.vue";
+import html2canvas from 'html2canvas';
+import axios from 'axios';
+import { getCustomPage, saveCustomPage } from '../api/customAPI';
+import Account1x1 from '../components/features/Account 1x1.vue';
+import Account1x2 from '../components/features/Account 1x2.vue';
+import Account2x4 from '../components/features/Account 2x4.vue';
+import Exchange1x1 from '../components/features/Exchange 1x1.vue';
+import Exchange1x2 from '../components/features/Exchange 1x2.vue';
+import Exchange2x2 from '../components/features/Exchange 2x2.vue';
+import Game1x1 from '../components/features/game1x1.vue';
 
 export default {
-  name: "UiuxEdit",
+  name: 'UiuxEdit',
   components: {
     Account1x1,
     Account1x2,
@@ -93,6 +94,7 @@ export default {
     Exchange1x1,
     Exchange1x2,
     Exchange2x2,
+    Game1x1,
   },
   data() {
     return {
@@ -103,39 +105,70 @@ export default {
       widgets: [], // 위젯 목록
       features: [
         {
-          name: "계좌 조회",
+          name: '계좌 조회',
           isDropdownOpen: false,
           options: [
             {
-              id: "1",
-              displayName: "1x1",
-              component: "Account1x1",
+              id: '1',
+              displayName: '1x1',
+              component: 'Account1x1',
               height: 100,
               width: 90,
             },
             {
-              id: "2",
-              displayName: "1x2",
-              component: "Account1x2",
+              id: '2',
+              displayName: '1x2',
+              component: 'Account1x2',
               height: 100,
               width: 180,
             },
             {
-              id: "3",
-              displayName: "2x4",
-              component: "Account2x4",
+              id: '3',
+              displayName: '2x4',
+              component: 'Account2x4',
               height: 200,
               width: 360,
             },
           ],
         },
         {
-          name: "환율 조회",
+          name: '환율 조회',
           isDropdownOpen: false,
           options: [
-            { id: "4", displayName: "1x1", component: "Exchange1x1" },
-            { id: "5", displayName: "1x2", component: "Exchange1x2" },
-            { id: "6", displayName: "2x2", component: "Exchange2x2" },
+            {
+              id: '4',
+              displayName: '1x1',
+              component: 'Exchange1x1',
+              height: 100,
+              width: 90,
+            },
+            {
+              id: '5',
+              displayName: '1x2',
+              component: 'Exchange1x2',
+              height: 100,
+              width: 180,
+            },
+            {
+              id: '6',
+              displayName: '2x2',
+              component: 'Exchange2x2',
+              height: 200,
+              width: 180,
+            },
+          ],
+        },
+        {
+          name: '참참참 게임',
+          isDropdownOpen: false,
+          options: [
+            {
+              id: '7',
+              displayName: '1x1',
+              component: 'Game1x1',
+              height: 100,
+              width: 90,
+            },
           ],
         },
       ], // 기능 목록
@@ -217,7 +250,7 @@ export default {
     // 위젯 삭제 메서드
     deleteWidget(index) {
       this.widgets.splice(index, 1);
-      alert("위젯이 삭제되었습니다.");
+      alert('위젯이 삭제되었습니다.');
     },
 
     // 드롭다운 토글 메서드
@@ -227,22 +260,22 @@ export default {
     },
 
     initSavedPage() {
-      if (localStorage.getItem("customPageData")) {
-        const pageData = JSON.parse(localStorage.getItem("customPageData"));
+      if (localStorage.getItem('customPageData')) {
+        const pageData = JSON.parse(localStorage.getItem('customPageData'));
         this.widgets = pageData.layoutData;
         this.pageID = pageData.pageID;
       }
     },
 
     async saveWidgetPositions() {
-      const userDataString = localStorage.getItem("user");
+      const userDataString = localStorage.getItem('user');
       const userData = JSON.parse(userDataString);
       const userNum = userData.userNum;
 
       let customPage = {
         userNum: userNum,
         layoutData: this.widgets,
-        imagePath: "null",
+        imagePath: 'null',
       };
 
       if (this.pageID) {
@@ -255,11 +288,11 @@ export default {
         await this.captureAndSave();
 
         // API 응답에 따른 처리
-        alert("사용자 설정이 저장되었습니다: " + response.message);
-        this.$router.push("/uiux");
+        alert('사용자 설정이 저장되었습니다: ' + response.message);
+        this.$router.push('/uiux');
       } catch (error) {
-        console.error("API 요청 실패:", error);
-        alert("저장에 실패했습니다. 다시 시도해주세요.");
+        console.error('API 요청 실패:', error);
+        alert('저장에 실패했습니다. 다시 시도해주세요.');
       }
     },
 
@@ -279,7 +312,7 @@ export default {
 
     // 드래그 시작 시 좌표 및 상태 설정
     startDrag(event, index) {
-      console.log("asdfads");
+      console.log('asdfads');
       this.isDragging = true;
       this.dragIndex = index;
 
@@ -292,8 +325,8 @@ export default {
       this.offsetY = event.clientY - widget.y;
 
       // 마우스 움직임에 따라 위치 변경
-      document.addEventListener("mousemove", this.onDrag);
-      document.addEventListener("mouseup", this.stopDrag);
+      document.addEventListener('mousemove', this.onDrag);
+      document.addEventListener('mouseup', this.stopDrag);
     },
 
     // 드래그 중 위치 갱신
@@ -348,8 +381,8 @@ export default {
         this.dragIndex = null;
 
         // 이벤트 리스너 제거
-        document.removeEventListener("mousemove", this.onDrag);
-        document.removeEventListener("mouseup", this.stopDrag);
+        document.removeEventListener('mousemove', this.onDrag);
+        document.removeEventListener('mouseup', this.stopDrag);
       }
     },
 
@@ -393,11 +426,11 @@ export default {
       try {
         const element = this.$refs.captureArea;
         if (!element) {
-          throw new Error("캡쳐할 요소를 찾을 수 없습니다.");
+          throw new Error('캡쳐할 요소를 찾을 수 없습니다.');
         }
 
         const canvas = await html2canvas(element, { scale: 2 });
-        const imageData = canvas.toDataURL("image/jpeg", 0.8);
+        const imageData = canvas.toDataURL('image/jpeg', 0.8);
 
         // 이미지 크기 제한 (예: 최대 너비 800px)
         const img = new Image();
@@ -413,24 +446,24 @@ export default {
           width = MAX_WIDTH;
         }
 
-        const resizedCanvas = document.createElement("canvas");
+        const resizedCanvas = document.createElement('canvas');
         resizedCanvas.width = width;
         resizedCanvas.height = height;
-        const ctx = resizedCanvas.getContext("2d");
+        const ctx = resizedCanvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
-        const resizedImageData = resizedCanvas.toDataURL("image/jpeg");
+        const resizedImageData = resizedCanvas.toDataURL('image/jpeg');
 
         // 서버로 전송
-        await axios.post("/api/community/capture", {
+        await axios.post('/api/community/capture', {
           sharedID: this.sharedID,
           imagePath: resizedImageData,
           userNum: this.userNum,
         });
 
-        alert("화면이 성공적으로 저장되었습니다!");
+        alert('화면이 성공적으로 저장되었습니다!');
       } catch (error) {
-        console.error("화면 캡쳐 요청 에러:", error);
-        alert("화면을 저장하는 데 실패했습니다.");
+        console.error('화면 캡쳐 요청 에러:', error);
+        alert('화면을 저장하는 데 실패했습니다.');
       }
     },
   },
