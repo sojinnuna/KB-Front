@@ -12,12 +12,13 @@ import SavingLoading from "@/pages/product/SavingLoading.vue";
 import HomePage from "@/pages/HomePage.vue";
 import CustomList from "@/pages/customCommunity/CustomList.vue";
 import SearchResult from "@/pages/product/SearchResult.vue";
+import StartPage from "@/pages/startPage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
 
   routes: [
-    { path: "/", name: "homepage", component: HomePage },
+    { path: "/start", name: "StartPage", component: StartPage },
     {
       path: "/trend",
       name: "trend",

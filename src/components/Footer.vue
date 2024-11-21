@@ -4,7 +4,7 @@
     <div class="navbar">
       <router-link to="/" class="nav-item home" exact-active-class="active">
         <i class="fa-solid fa-file-invoice"></i>
-        <span>전체계좌</span>
+        <span>홈</span>
       </router-link>
       <router-link
         to="/trend"
@@ -28,7 +28,7 @@
         exact-active-class="active"
       >
         <i class="fa-solid fa-gift"></i>
-        <span>혜택</span>
+        <span>커뮤니티</span>
       </router-link>
     </div>
 
@@ -63,11 +63,10 @@ const isActive = (path) => {
       (route.path === "/matchingProducts" &&
         route.query.group &&
         route.query.keyword) || // /matchingProducts에서 group과 keyword가 있을 때
-      (route.path === "/loading" && route.query.group && route.query.keyword)  ||
-          route.path === "/matchingSavings" ||
-          route.path === "searchResult"
-
-     );
+      (route.path === "/loading" && route.query.group && route.query.keyword) ||
+      route.path === "/matchingSavings" ||
+      route.path === "searchResult"
+    );
   }
   return route.path === path;
 };

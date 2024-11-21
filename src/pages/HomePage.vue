@@ -1,11 +1,9 @@
 <template>
-  <div class="binBox">
-
-  </div>
+  <div class="binBox"></div>
   <div class="main-page">
-    <br>
+    <br />
     <!-- 상단 계좌 -->
-    <TrendBanner/><br>
+    <TrendBanner /><br />
     <div class="header-section">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
@@ -22,7 +20,9 @@
       </div>
       <br />
       <br />
-      <div class="balance-amount">{{ formatCurrency(accountData.balance) }}</div>
+      <div class="balance-amount">
+        {{ formatCurrency(accountData.balance) }}
+      </div>
       <button class="transfer-button">출금계좌등록</button>
     </div>
 
@@ -33,7 +33,7 @@
     <!-- Tab Section -->
     <div class="exchange-rate-section">
       <h2 class="tab-title">환율</h2>
-      <div class="last-updated">매매기준율 2024.11.20 16:25:55</div>
+      <div class="last-updated">매매기준율 2024.11.22 11:25:55</div>
       <div class="rate-list">
         <div class="rate-item">
           <span class="currency">USD</span>
@@ -244,7 +244,7 @@
 .binBox {
   width: 100%;
   height: 60px;
-  background-color: #EEF4F9; /* 필요한 경우 배경색 추가 */
+  background-color: #eef4f9; /* 필요한 경우 배경색 추가 */
   position: fixed;
   top: 0;
   z-index: 100;
@@ -255,20 +255,22 @@ import TrendBanner from "@/components/TrendBanner.vue";
 import { ref, onMounted } from "vue";
 import Transfer from "@/components/features/Transfer.vue";
 const accountData = ref({
-  accountType:'',
-  accountNumber:'',
-  balance:'',
-
+  accountType: "",
+  accountNumber: "",
+  balance: "",
 });
 
 const fetchAccountData = async (accountNumber: number) => {
   try {
-    const response = await fetch(`http://localhost:8080/api/account/${accountNumber}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `http://localhost:8080/api/account/${accountNumber}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (response.ok) {
       accountData.value = await response.json();
@@ -289,5 +291,4 @@ onMounted(() => {
 const formatCurrency = (value: number) => {
   return value.toLocaleString("ko-KR") + "원";
 };
-
 </script>

@@ -1,14 +1,16 @@
 <template>
   <div v-if="!$route.meta.hideChatBot">
     <button class="chatbot-button" @click="toggleChat">
-      <img src="/images/rabbit.png" alt="Chatbot Icon" />
+      <img src="/images/rabbit2.png" alt="Chatbot Icon" />
     </button>
 
     <!-- 논모달 챗봇 창 -->
     <div v-if="isChatOpen" class="chat-modal">
       <!-- 헤더 -->
       <div class="chat-header">
-        <h1 class="chat-title">💬 KB 가이드 챗봇</h1>
+        <div class="chat-title">
+          <i class="fa-solid fa-comment-dots"></i> KB 가이드 챗봇
+        </div>
         <button @click="toggleChat" class="close-chat">
           <i class="fa-solid fa-xmark"></i>
         </button>
@@ -233,7 +235,7 @@ export default {
 
 /* 풋터 */
 .chat-footer {
-  background-color: #fff8e1;
+  background-color: #ffcc00;
   padding: 10px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -262,10 +264,6 @@ export default {
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
-}
-
-.send-button:hover {
-  background-color: #ffbc00;
 }
 
 .chat-message {
