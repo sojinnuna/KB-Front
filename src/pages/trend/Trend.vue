@@ -7,6 +7,7 @@
           type="text"
           placeholder="금융상품을 검색해보세요"
           v-model="searchQuery"
+          @keyup.enter="handleSearch"
       />
       <button class="searchBtn" @click="handleSearch">
         <i class="d-inline bi bi-search"></i>
