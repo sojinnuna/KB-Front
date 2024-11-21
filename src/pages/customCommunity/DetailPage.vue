@@ -1,4 +1,7 @@
 <template>
+  <div class="binBox">
+
+  </div>
   <div class="container">
     <!-- ReviewHeader 컴포넌트 삽입 (필요 시 추가) -->
     <ReviewHeader />
@@ -13,14 +16,11 @@
         <h5>{{ customDetail.heart }}</h5>
       </div>
     </div>
-
+    <br />
     <!-- 상세 이미지 및 제목 섹션 -->
     <div class="detail-section">
       <div class="image">
-        <img :src="customDetail.imagePath" alt="Custom Image" />
-      </div>
-      <div class="text">
-        <h5>{{ customDetail.pageName }}</h5>
+        <img :src="getImageUrl(customDetail.imagePath)" alt="Custom Image" />
       </div>
     </div>
 
@@ -43,8 +43,8 @@
     <!-- 버튼 섹션 -->
     <div class="btnBox">
       <button class="btn">적용</button>
-      <button class="btn" @click="toggleLike">
-        <i class="bi bi-heart"></i>
+      <button class="btn" :disabled="customDetail.isLiked" @click="toggleLike">
+        <i class="bi" :class="customDetail.isLiked ? 'bi-heart-fill' : 'bi-heart'"></i>
       </button>
     </div>
 
@@ -57,6 +57,7 @@
     <div v-if="errorMessage" class="error-message">
       {{ errorMessage }}
     </div>
+    <br />
   </div>
 </template>
 
@@ -78,19 +79,20 @@ const customDetail = ref({
   pageName: '',
   heart: 0,
   imagePath: '',
-  description: '',
-  // likedUsers: [], // 좋아요 한 유저 목록 제거
+  isLiked: false,
 });
 
-// 현재 사용자 ID (실제 애플리케이션에서는 인증된 사용자 정보에서 가져와야 함)
-const currentUserId = ref(1); // 예시: ID 1로 설정
+const getImageUrl = (imagePath) => {
+  const baseUrl = "http://localhost:8080";
+  return imagePath ? `${baseUrl}/${imagePath}` : `${baseUrl}/images/default-image.jpeg`;
+};
 
 // 데이터 불러오기
 const fetchCustomDetail = async () => {
   isLoading.value = true;
   errorMessage.value = '';
 
-  const shareID = route.params.shareID; // 라우트 파라미터에서 shareID 가져오기
+  const shareID = route.params.sharedID; // 라우트 파라미터에서 shareID 가져오기
   if (!shareID) {
     errorMessage.value = '유효하지 않은 페이지 ID입니다.';
     isLoading.value = false;
@@ -129,21 +131,13 @@ const toggleLike = async () => {
       },
     });
     // 성공 시 heart 수 증가
+    customDetail.value.isLiked = true;
     customDetail.value.heart += 1;
   } catch (error) {
     console.error('좋아요 요청 에러:', error);
     errorMessage.value = '좋아요를 누르는 데 실패했습니다.';
   } finally {
     isLoading.value = false;
-  }
-};
-
-// 상세 페이지로 이동 (현재 페이지에서 사용하지 않지만, 필요 시 함수 유지)
-const navigateToDetailPage = (id) => {
-  if (id) {
-    router.push(`/detailPage/${id}`);
-  } else {
-    alert('유효하지 않은 페이지 ID입니다.');
   }
 };
 
@@ -156,7 +150,7 @@ onMounted(() => {
 <style scoped>
 /* 컨테이너 스타일 */
 .container {
-  padding: 60px 20px 20px;
+  padding: 60px 40px 20px;
   font-family: Arial, sans-serif;
   position: relative;
 }
@@ -210,6 +204,17 @@ onMounted(() => {
   font-size: 1.5em;
 }
 
+.active {
+  color: #ff5a5f;
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+
+.bi-heart-fill {
+  color: #ff5a5f; /* 좋아요 눌렀을 때 색상 */
+}
+
 .texts p {
   font-size: 1em;
   line-height: 1.5;
@@ -223,8 +228,7 @@ onMounted(() => {
 }
 
 .detail-section .image {
-  flex: 1;
-  max-width: 300px;
+  max-width: 200px;
 }
 
 .detail-section .image img {
@@ -251,7 +255,7 @@ onMounted(() => {
 .heartCount h1 {
   font-size: 74px;
   margin: 0;
-  color: #ff5a5f;
+  color: #4c4c4c;
 }
 
 
@@ -283,17 +287,12 @@ onMounted(() => {
   justify-content: center;
 }
 
-.btn:hover {
-  background-color: #e6b800;
-}
 
 .btn .bi {
   margin-left: 8px;
   font-size: 24px;
 }
 
-/* 좋아요 버튼 활성화 시 색상 변경 */
-/* isLiked 상태가 없으므로 관련 스타일 제거 */
 
 /* 로딩 오버레이 스타일 */
 .loading-overlay {
@@ -334,5 +333,14 @@ onMounted(() => {
   grid-template-rows: repeat(6, 1fr);
   gap: 0;
   position: relative;
+}
+
+.binBox {
+  width: 100%;
+  height: 100px;
+  background-color: #EEF4F9;
+  position: fixed;
+  top: 0;
+  z-index: 100;
 }
 </style>

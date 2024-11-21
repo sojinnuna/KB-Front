@@ -1,6 +1,11 @@
 <template>
+  <div class="binBox">
+
+  </div>
   <div class="main-page">
+    <br>
     <!-- 상단 계좌 -->
+    <TrendBanner/><br>
     <div class="header-section">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
@@ -235,4 +240,16 @@
   transform: translateY(-2px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.binBox {
+  width: 100%;
+  height: 60px;
+  background-color: #EEF4F9; /* 필요한 경우 배경색 추가 */
+  position: fixed;
+  top: 0;
+  z-index: 100;
+}
 </style>
+<script setup lang="ts">
+import TrendBanner from "@/components/TrendBanner.vue";
+</script>
