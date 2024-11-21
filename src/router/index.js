@@ -10,7 +10,6 @@ import UiuxEdit from "@/pages/UiuxEdit.vue";
 import MatchingSavings from "@/pages/product/MatchingSavings.vue";
 import SavingLoading from "@/pages/product/SavingLoading.vue";
 import HomePage from "@/pages/HomePage.vue";
-import UiuxTransfer from "@/pages/uiuxTransfer.vue";
 import CustomList from "@/pages/customCommunity/CustomList.vue";
 import SearchResult from "@/pages/product/SearchResult.vue";
 
@@ -93,11 +92,6 @@ const router = createRouter({
       name: "customList",
       component: CustomList,
       meta: { hideHeader: true },
-    },
-    {
-      path: "/transfer",
-      name: "Transfer",
-      component: UiuxTransfer,
     },
   ],
 });
