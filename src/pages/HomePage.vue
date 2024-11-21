@@ -11,18 +11,18 @@
         <div class="flex items-center gap-3">
           <div class="flex items-center gap-2">
             <img src="/images/kb-logo.png" alt="KB Logo" class="logo-img" />
-            <div class="account-label">한도제한계좌</div>
+            <div class="account-label"></div>
             <div class="account-title">KB국민ONE통장</div>
           </div>
         </div>
       </div>
       <div class="account-number">
-        <span>394410-85-000001</span>
+        <span>{{ accountData.accountNumber }}</span>
         <i class="fa-solid fa-copy copy-icon"></i>
       </div>
       <br />
       <br />
-      <div class="balance-amount">1,000,000원</div>
+      <div class="balance-amount">{{ formatCurrency(accountData.balance) }}</div>
       <button class="transfer-button">출금계좌등록</button>
     </div>
 
@@ -252,4 +252,42 @@
 </style>
 <script setup lang="ts">
 import TrendBanner from "@/components/TrendBanner.vue";
+import { ref, onMounted } from "vue";
+import Transfer from "@/components/features/Transfer.vue";
+const accountData = ref({
+  accountType:'',
+  accountNumber:'',
+  balance:'',
+
+});
+
+const fetchAccountData = async (accountNumber: number) => {
+  try {
+    const response = await fetch(`http://localhost:8080/api/account/${accountNumber}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      accountData.value = await response.json();
+      console.log(accountData.value);
+    } else {
+      console.error("계좌 정보를 가져오는 데 실패했습니다.");
+    }
+  } catch (error) {
+    console.error("오류 발생:", error);
+  }
+};
+
+// 예제 계좌 번호를 사용합니다.
+onMounted(() => {
+  fetchAccountData(33333322111111);
+});
+
+const formatCurrency = (value: number) => {
+  return value.toLocaleString("ko-KR") + "원";
+};
+
 </script>

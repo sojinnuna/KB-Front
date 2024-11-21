@@ -5,13 +5,16 @@
     <button class="action-button" @click="showDetails">자세히</button>
   </div>
 </template>
-
 <script>
+import axios from "axios";
+
+
 export default {
-  name: 'Widget',
+  name: "Widget",
   data() {
     return {
-      balance: 1234567, // 초기 잔액 데이터
+      accountNumber: '33333322111111',
+      balance: 0, // 초기 잔액 데이터 (숫자)
     };
   },
   computed: {
@@ -21,14 +24,31 @@ export default {
     },
   },
   methods: {
+    // '자세히' 버튼 클릭 시 알림
     showDetails() {
-      // '자세히' 버튼 클릭 시 알림
-      alert('잔액 상세 보기');
+      alert("잔액 상세 보기");
     },
+    // 서버에서 잔액 데이터 가져오기
+    async fetchBalance() {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/account/${this.accountNumber}`);
+        if (response.status === 200) {
+          this.balance = response.data.balance; // 서버에서 받은 잔액 데이터
+        } else {
+          console.error("데이터를 가져오는 데 실패했습니다.");
+          alert("잔액 정보를 가져오는 데 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("API 호출 중 오류:", error);
+        alert("API 호출 중 오류가 발생했습니다.");
+      }
+    },
+  },
+  mounted() {
+    this.fetchBalance(); // 컴포넌트가 마운트될 때 API 호출
   },
 };
 </script>
-
 <style scoped>
 .widget-container {
   width: 90px;
