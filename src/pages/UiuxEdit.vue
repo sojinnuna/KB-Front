@@ -1,5 +1,5 @@
 <template>
-  <div class="main-page">
+  <div class="main-page"  ref="captureArea">
     <!-- 새로운 상자 -->
     <div class="plus-box2" @click="saveWidgetPositions">
       <span class="plus-sign">저장하기</span>
@@ -68,6 +68,8 @@
 </template>
 
 <script>
+import html2canvas from 'html2canvas';
+import axios from "axios";
 export default {
   name: 'UiuxEdit',
   components: {},
@@ -111,7 +113,7 @@ export default {
       this.widgets.splice(index, 1);
       alert('위젯이 삭제되었습니다.');
     },
-    saveWidgetPositions() {
+    async saveWidgetPositions() {
       const widgetPositions = this.widgets.map((widget) => ({
         name: widget.name,
         x: widget.x,
@@ -119,12 +121,17 @@ export default {
       }));
       localStorage.setItem('widgetPositions', JSON.stringify(widgetPositions));
 
-      // 알림 메시지 표시
-      alert('사용자 설정이 저장되었습니다');
-
-      // /uiux 페이지로 리다이렉트
-      this.$router.push('/uiux');
+      try {
+        await this.captureAndSave();
+        alert('사용자 설정이 저장되었습니다.');
+        // /uiux 페이지로 리다이렉트
+        this.$router.push('/uiux');
+      } catch (error) {
+        console.error('화면 캡쳐 요청 에러:', error);
+        alert('화면을 저장하는 데 실패했습니다.');
+      }
     },
+
     toggleBottomSheet() {
       if (this.isEditingMode) {
         this.saveWidgetPositions(); // 위치 저장
@@ -310,6 +317,52 @@ export default {
         }
       }
     },
+    // DetailPage.vue의 captureAndSave 메서드 수정 예시
+
+    async captureAndSave() {
+      try {
+        const element = this.$refs.captureArea;
+        if (!element) {
+          throw new Error('캡쳐할 요소를 찾을 수 없습니다.');
+        }
+
+        const canvas = await html2canvas(element, { scale: 2 });
+        const imageData = canvas.toDataURL('image/jpeg', 0.8);
+
+        // 이미지 크기 제한 (예: 최대 너비 800px)
+        const img = new Image();
+        img.src = imageData;
+        await new Promise((resolve) => {
+          img.onload = resolve;
+        });
+
+        const MAX_WIDTH = 800;
+        let { width, height } = img;
+        if (width > MAX_WIDTH) {
+          height *= MAX_WIDTH / width;
+          width = MAX_WIDTH;
+        }
+
+        const resizedCanvas = document.createElement('canvas');
+        resizedCanvas.width = width;
+        resizedCanvas.height = height;
+        const ctx = resizedCanvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const resizedImageData = resizedCanvas.toDataURL('image/jpeg');
+
+        // 서버로 전송
+        await axios.post('/api/community/capture', {
+          sharedID: this.sharedID,
+          imagePath: resizedImageData,
+          userNum: this.userNum,
+        });
+
+        alert('화면이 성공적으로 저장되었습니다!');
+      } catch (error) {
+        console.error('화면 캡쳐 요청 에러:', error);
+        alert('화면을 저장하는 데 실패했습니다.');
+      }
+    }
   },
 };
 </script>
@@ -357,7 +410,7 @@ export default {
   top: 4px; /* 위젯의 상단 */
   right: 4px; /* 위젯의 오른쪽 */
   transform: translate(50%, -50%); /* 약간의 위치 조정을 위해 변환 */
-  background-color: #fff(251, 251, 251);
+  background-color: #fff;
   color: #333;
   border: none;
   border-radius: 50%;

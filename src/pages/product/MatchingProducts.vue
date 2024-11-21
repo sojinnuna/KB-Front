@@ -362,7 +362,7 @@ h6 {
   color: white;
 }
 .scroll{
-  text-align: end;
+  text-align: center;
 }
 
 </style>

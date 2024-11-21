@@ -63,8 +63,11 @@ const isActive = (path) => {
       (route.path === "/matchingProducts" &&
         route.query.group &&
         route.query.keyword) || // /matchingProducts에서 group과 keyword가 있을 때
-      (route.path === "/loading" && route.query.group && route.query.keyword) // /loading에서 group과 keyword가 있을 때
-    );
+      (route.path === "/loading" && route.query.group && route.query.keyword)  ||
+          route.path === "/matchingSavings" ||
+          route.path === "searchResult"
+
+     );
   }
   return route.path === path;
 };
