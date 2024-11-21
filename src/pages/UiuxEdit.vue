@@ -170,9 +170,7 @@ export default {
 
     initSavedPage() {
       if (localStorage.getItem('customPageData')) {
-        console.log('adsf');
         const pageData = JSON.parse(localStorage.getItem('customPageData'));
-        console.log(pageData.layoutData);
         this.widgets = pageData.layoutData;
         this.pageID = pageData.pageID;
       }
