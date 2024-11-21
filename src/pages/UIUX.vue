@@ -114,14 +114,15 @@ export default {
   bottom: 114px;
   left: 50%;
   transform: translateX(-50%);
-  width: 200px;
+  width: 100px;
   height: 50px;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(220, 210, 210, 0.2);
   border-radius: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  margin-bottom:10px;
 }
 
 .widget {

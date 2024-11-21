@@ -40,11 +40,13 @@ export default {
   padding: 10px 20px;
   position: fixed;
   top: 0%;
+  background-color: white;
   left: 50%;
   transform: translateX(-50%);
   z-index: 999;
   width: 360px;
   white-space: nowrap;
+  border-bottom: 1px solid #d2cdcd;
 }
 
 
