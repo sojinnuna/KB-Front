@@ -1,5 +1,5 @@
 <template>
-  <div class="main-page"  ref="captureArea">
+  <div class="main-page" ref="captureArea">
     <!-- 새로운 상자 -->
     <div class="plus-box2" @click="saveWidgetPositions">
       <span class="plus-sign">저장하기</span>
@@ -25,16 +25,23 @@
       </div>
 
       <div class="bottom-sheet-body">
-        <!-- 클릭 가능한 기능 항목 -->
         <div
           class="feature-item"
           v-for="(feature, index) in features"
           :key="index"
-          @click="handleFeatureClick(feature)"
         >
-          <div class="feature-content">
+          <div class="feature-content" @click="toggleDropdown(index)">
             <i class="fa-solid fa-circle-plus" style="color: #08af2a"></i>
-            <span>&nbsp;{{ feature }}</span>
+            <span>&nbsp;{{ feature.name }}</span>
+          </div>
+          <div v-if="feature.isDropdownOpen" class="dropdown-content">
+            <p
+              v-for="(option, optionIndex) in feature.options"
+              :key="optionIndex"
+              @click="addWidget(option)"
+            >
+              {{ option.displayName }}
+            </p>
           </div>
           <hr class="feature-divider" />
         </div>
@@ -53,42 +60,51 @@
       :style="{ top: widget.y + 'px', left: widget.x + 'px' }"
       @mousedown="isEditingMode && startDrag($event, index)"
     >
-      <div class="widget-content">
-        <span>{{ widget.name }}</span>
-        <button
-          v-if="isEditingMode"
-          class="delete-button"
-          @click.stop="deleteWidget(index)"
-        >
-          x
-        </button>
-      </div>
+      <!-- 동적 컴포넌트 렌더링 -->
+      <component :is="widget.component" />
+      <button
+        v-if="isEditingMode"
+        class="delete-button"
+        @click.stop="deleteWidget(index)"
+      >
+        x
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import html2canvas from 'html2canvas';
-import axios from "axios";
+import axios from 'axios';
+import { getCustomPage, saveCustomPage } from '../api/customAPI';
+import Account1x1 from '../components/features/Account 1x1.vue';
+import Account2x1 from '../components/features/Account 2x1.vue';
+import Account4x2 from '../components/features/Account 4x2.vue';
+
 export default {
   name: 'UiuxEdit',
-  components: {},
+  components: {
+    Account1x1,
+    Account2x1,
+    Account4x2,
+  },
   data() {
     return {
+      pageID: null,
       isBottomSheetVisible: false,
       bottomSheetZIndex: 1, // 바텀 시트의 z-index 초기값
-      isEditingMode: false, // 편집 모드 여부
+      isEditingMode: true, // 편집 모드 여부
       widgets: [], // 위젯 목록
       features: [
-        '계좌이체',
-        '최근거래내역조회',
-        '내계좌전체보기',
-        '상품가입',
-        '환전',
-        'ATM/창구출금',
-        '증명서발급',
-        '인증/보안',
-        '고객센터',
+        {
+          name: '계좌 조회',
+          isDropdownOpen: false,
+          options: [
+            { id: '1', displayName: '1x1', component: 'Account1x1' },
+            { id: '2', displayName: '2x1', component: 'Account2x1' },
+            { id: '3', displayName: '4x2', component: 'Account4x2' },
+          ],
+        },
       ], // 기능 목록
       isDragging: false, // 드래그 상태 관리
       dragIndex: null, // 현재 드래그 중인 위젯 인덱스
@@ -101,87 +117,97 @@ export default {
       gridSpacingY: 98.125,
     };
   },
-  created() {
-    const savedWidgetPositions = localStorage.getItem('widgetPositions');
-    if (savedWidgetPositions) {
-      this.widgets = JSON.parse(savedWidgetPositions);
-    }
+  mounted() {
+    this.initSavedPage();
   },
   methods: {
-    // 위젯 삭제 메서드
-    deleteWidget(index) {
-      this.widgets.splice(index, 1);
-      alert('위젯이 삭제되었습니다.');
-    },
-    async saveWidgetPositions() {
-      const widgetPositions = this.widgets.map((widget) => ({
-        name: widget.name,
-        x: widget.x,
-        y: widget.y,
-      }));
-      localStorage.setItem('widgetPositions', JSON.stringify(widgetPositions));
-
-      try {
-        await this.captureAndSave();
-        alert('사용자 설정이 저장되었습니다.');
-        // /uiux 페이지로 리다이렉트
-        this.$router.push('/uiux');
-      } catch (error) {
-        console.error('화면 캡쳐 요청 에러:', error);
-        alert('화면을 저장하는 데 실패했습니다.');
-      }
-    },
-
-    toggleBottomSheet() {
-      if (this.isEditingMode) {
-        this.saveWidgetPositions(); // 위치 저장
-        // 편집 모드에서 "완료" 버튼 클릭 시 편집 모드 종료
-        this.isEditingMode = false;
-        this.widgets.forEach((widget) => {
-          widget.draggable = false; // 드래그 비활성화
-        });
-      } else {
-        this.isBottomSheetVisible = !this.isBottomSheetVisible;
-        this.bottomSheetZIndex = this.isBottomSheetVisible ? 999 : 1;
-        this.isEditingMode = true; // 편집 모드 시작
-        this.widgets.forEach((widget) => {
-          widget.draggable = true; // 편집 모드에서 드래그 활성화
-        });
-      }
-    },
-    handleFeatureClick(feature) {
+    addWidget(option) {
       const isFeatureAdded = this.widgets.some(
-        (widget) => widget.name === feature
+        (widget) => widget.id === option.id
       );
       if (isFeatureAdded) {
-        alert(`${feature} 기능은 이미 추가된 기능입니다.`);
+        alert(`${option.displayName} 기능은 이미 추가된 기능입니다.`);
         return; // 이미 추가된 항목은 추가하지 않음
       }
-      alert(`${feature} 기능을 선택했습니다.`);
-      // 기능 클릭 시 위젯 추가
+      alert(`${option.displayName} 기능을 선택했습니다.`);
+
       const widget = {
-        name: feature,
+        id: option.id,
+        name: option.displayName,
+        component: option.component, // 옵션을 위젯 이름으로 사용
         x: 0, // 초기 X 좌표 (0으로 시작)
         y: 0, // 초기 Y 좌표 (0으로 시작)
-        zindex: 1,
-        draggable: this.isEditingMode, // 편집 모드일 때만 드래그 가능
       };
 
-      // 위젯 위치가 다른 위젯과 겹치지 않도록 확인
       let isOverlapping = true;
       while (isOverlapping) {
         isOverlapping = false;
         for (const existingWidget of this.widgets) {
           if (this.isOverlapping(widget, existingWidget)) {
-            widget.y += 100; // 100px만큼 y축 위치를 내려서 겹침 방지
+            widget.y = parseInt(widget.y) + 100; // 100px만큼 y축 위치를 내려서 겹침 방지
             isOverlapping = true;
             break;
           }
         }
       }
 
+      console.log(this.widgets);
       this.widgets.push(widget);
       this.isBottomSheetVisible = false; // 바텀 시트 숨기기
+    },
+
+    // 위젯 삭제 메서드
+    deleteWidget(index) {
+      this.widgets.splice(index, 1);
+      alert('위젯이 삭제되었습니다.');
+    },
+
+    // 드롭다운 토글 메서드
+    toggleDropdown(index) {
+      this.features[index].isDropdownOpen =
+        !this.features[index].isDropdownOpen;
+    },
+
+    initSavedPage() {
+      if (localStorage.getItem('customPageData')) {
+        const pageData = JSON.parse(localStorage.getItem('customPageData'));
+        this.widgets = pageData.layoutData;
+        this.pageID = pageData.pageID;
+      }
+    },
+
+    async saveWidgetPositions() {
+      const userDataString = localStorage.getItem('user');
+      const userData = JSON.parse(userDataString);
+      const userNum = userData.userNum;
+
+      let customPage = {
+        userNum: userNum,
+        layoutData: this.widgets,
+        imagePath: 'null',
+      };
+
+      if (this.pageID) {
+        customPage.pageID = this.pageID;
+      }
+
+      try {
+        // API 호출
+        const response = await saveCustomPage(customPage);
+        await this.captureAndSave();
+
+        // API 응답에 따른 처리
+        alert('사용자 설정이 저장되었습니다: ' + response.message);
+        this.$router.push('/uiux');
+      } catch (error) {
+        console.error('API 요청 실패:', error);
+        alert('저장에 실패했습니다. 다시 시도해주세요.');
+      }
+    },
+
+    toggleBottomSheet() {
+      this.isBottomSheetVisible = !this.isBottomSheetVisible;
+      this.bottomSheetZIndex = this.isBottomSheetVisible ? 999 : 1;
     },
 
     // 위젯 간 겹침을 확인하는 메서드
@@ -196,12 +222,14 @@ export default {
 
     // 드래그 시작 시 좌표 및 상태 설정
     startDrag(event, index) {
-      if (!this.widgets[index].draggable) return; // 드래그가 비활성화된 경우 처리 안 함
-
+      console.log('asdfads');
       this.isDragging = true;
       this.dragIndex = index;
-      this.offsetX = event.clientX - this.widgets[index].x;
-      this.offsetY = event.clientY - this.widgets[index].y;
+
+      const widget = this.widgets[this.dragIndex];
+
+      this.offsetX = event.clientX - widget.x;
+      this.offsetY = event.clientY - widget.y;
 
       // 마우스 움직임에 따라 위치 변경
       document.addEventListener('mousemove', this.onDrag);
@@ -210,45 +238,27 @@ export default {
 
     // 드래그 중 위치 갱신
     onDrag(event) {
-      if (this.isDragging) {
-        let newX = event.clientX - this.offsetX;
-        let newY = event.clientY - this.offsetY;
+      if (!this.isDragging || this.dragIndex === null) return;
 
-        // 그리드 내에서 위치 제한
-        newX = Math.max(
-          0,
-          Math.min(newX, this.gridSpacingX * (this.gridSize.x - 1))
-        );
-        newY = Math.max(0, Math.min(newY, this.gridHeight - 110));
+      const widget = this.widgets[this.dragIndex];
 
-        // 위젯의 x, y 좌표가 화면 바깥으로 나가지 않도록 제한
-        this.widgets[this.dragIndex].x = Math.min(
-          Math.max(newX, 0), // x좌표 제한 (왼쪽 경계)
-          this.gridWidth - 90 // x좌표 제한 (오른쪽 경계)
-        );
+      let newX = event.clientX - this.offsetX;
+      let newY = event.clientY - this.offsetY;
 
-        this.widgets[this.dragIndex].y = Math.min(
-          Math.max(newY, 0), // y좌표 제한 (위쪽 경계)
-          this.gridHeight - 110 // y좌표 제한 (아래쪽 경계)
-        );
+      // 그리드 내에서 위치 제한
+      newX = Math.max(0, Math.min(newX, this.gridWidth - this.gridSpacingX));
+      newY = Math.max(0, Math.min(newY, this.gridHeight - this.gridSpacingY));
 
-        // 드래그 중인 위젯과 다른 위젯들이 겹치지 않도록 체크
-        let isOverlapping = false;
-        for (const existingWidget of this.widgets) {
-          if (
-            this.isOverlapping(this.widgets[this.dragIndex], existingWidget)
-          ) {
-            isOverlapping = true;
-            break;
-          }
-        }
+      // 위젯의 x, y 좌표가 화면 바깥으로 나가지 않도록 제한
+      widget.x = Math.min(
+        Math.max(newX, 0), // x좌표 제한 (왼쪽 경계)
+        this.gridWidth - 90 // x좌표 제한 (오른쪽 경계)
+      );
 
-        if (!isOverlapping) {
-          // 겹치지 않으면 위치를 갱신
-          this.widgets[this.dragIndex].x = newX;
-          this.widgets[this.dragIndex].y = newY;
-        }
-      }
+      widget.y = Math.min(
+        Math.max(newY, 0), // y좌표 제한 (위쪽 경계)
+        this.gridHeight - 110 // y좌표 제한 (아래쪽 경계)
+      );
     },
 
     // 드래그 종료 후 위치 업데이트
@@ -362,7 +372,7 @@ export default {
         console.error('화면 캡쳐 요청 에러:', error);
         alert('화면을 저장하는 데 실패했습니다.');
       }
-    }
+    },
   },
 };
 </script>
@@ -379,22 +389,24 @@ export default {
 
 .plus-box {
   position: fixed;
-  bottom: 114px;
-  left: 45%;
-  transform: translateX(-50%);
+  bottom: 114px; /* 하단에서의 간격 */
+  left: 30%; /* 화면의 45% 지점 */
+  transform: translateX(-50%); /* 버튼의 중심을 정확히 조정 */
   width: 130px;
   height: 50px;
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 15px;
+  background-color: rgba(0, 0, 0, 0.2); /* 반투명한 배경 */
+  border-radius: 15px; /* 둥근 모서리 */
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  z-index: 10; /* 다른 요소 위에 렌더링 */
 }
+
 .plus-box2 {
   position: fixed;
-  bottom: 114px;
-  left: 55%;
+  bottom: 114px; /* 동일한 하단 간격 */
+  left: calc(30% + 150px); /* `.plus-box`의 오른쪽으로 이동 */
   transform: translateX(-50%);
   width: 130px;
   height: 50px;
@@ -404,6 +416,7 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  z-index: 10;
 }
 .delete-button {
   position: absolute;
@@ -423,21 +436,15 @@ export default {
 
 .widget {
   position: absolute;
-  width: 90px; /* 그리드 칸의 너비 */
-  height: 98.125px; /* 그리드 칸의 높이 */
+  /* width: 90px;
+  height: 98.125px; 
   background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
+  border-radius: 15px; */
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: grab;
   z-index: 1;
-}
-
-.widget-content {
-  text-align: center;
-  font-size: 14px;
-  color: #333;
 }
 
 .plus-sign {

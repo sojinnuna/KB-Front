@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import Account from '@/components/features/Account.vue';
+import Account from '@/components/features/Account 1x1.vue';
 import Exchange from '@/components/features/Exchange.vue';
 import Transfer from '@/components/features/Transfer.vue';
 

@@ -6,26 +6,32 @@
     </div>
 
     <!-- 위젯들 렌더링 -->
-    <div
-      v-for="(widget, index) in widgets"
-      :key="index"
-      class="widget"
-      :style="{ top: `${widget.y}px`, left: `${widget.x}px` }"
-      draggable="true"
-      @dragstart="onDragStart(index, $event)"
-      @dragend="onDragEnd(index, $event)"
+   <div
+        v-for="(widget, index) in widgets"
+        :key="index"
+        class="widget"
+        :style="{ top: widget.y + 'px', left: widget.x + 'px' }"
     >
-      <div class="widget-content">
-        <span>{{ widget.name }}</span>
-      </div>
+      <!-- 동적 컴포넌트 렌더링 -->
+      <component :is="widget.component" />
     </div>
   </div>
 </template>
 
 <script>
+import { getCustomPage, saveCustomPage } from '../api/customAPI';
+import Account1x1 from '../components/features/Account 1x1.vue';
+import Account2x1 from '../components/features/Account 2x1.vue';
+import Account4x2 from '../components/features/Account 4x2.vue';
+
+
 export default {
   name: 'UiUx',
-
+  components: {
+    Account1x1,
+    Account2x1,
+    Account4x2,
+  },
   data() {
     return {
       isBottomSheetVisible: false,
@@ -33,17 +39,15 @@ export default {
       isEditingMode: false, // 편집 모드 여부
       widgets: [], // 위젯 목록
       features: [
-        '계좌이체',
-        '최근거래내역조회',
-        '내계좌전체보기',
-        '상품가입',
-        '환전',
-        'ATM/창구출금',
-        '증명서발급',
-        '인증/보안',
-        '고객센터',
+        {
+          name: '계좌 조회',
+          options: [
+            { id: '1', displayName: '1x1', component: 'Account1x1' },
+            { id: '2', displayName: '2x1', component: 'Account2x1' },
+            { id: '3', displayName: '4x2', component: 'Account4x2' },
+          ],
+        },
       ], // 기능 목록
-      isDragging: false, // 드래그 상태 관리
       dragIndex: null, // 현재 드래그 중인 위젯 인덱스
       offsetX: 0, // 드래그 시작 시 offset 값
       offsetY: 0, // 드래그 시작 시 offset 값
@@ -55,40 +59,28 @@ export default {
     };
   },
   mounted() {
-    // 로컬 스토리지에서 위젯 위치 로드
-    const storedWidgetPositions = localStorage.getItem('widgetPositions');
-    if (storedWidgetPositions) {
-      this.widgets = JSON.parse(storedWidgetPositions);
-    }
+    this.initSavedPage();
   },
   methods: {
     navigateToUiuxEdit() {
       this.$router.push('/uiuxedit'); // /uiuxedit 페이지로 이동
     },
 
-    onDragStart(index, event) {
-      this.isDragging = true;
-      this.dragIndex = index;
-      this.offsetX = event.offsetX;
-      this.offsetY = event.offsetY;
-    },
-    onDragEnd(index, event) {
-      if (!this.isDragging) return;
+    async initSavedPage() {
+      const userDataString = localStorage.getItem('user');
+      const userData = JSON.parse(userDataString);
+      const userNum = userData.userNum;
 
-      const newX = event.pageX - this.offsetX;
-      const newY = event.pageY - this.offsetY;
+      const saveCustomPage = await getCustomPage(userNum);
 
-      // 그리드에 맞춰 위치 스냅
-      this.widgets[index].x =
-        Math.round(newX / this.gridSpacingX) * this.gridSpacingX;
-      this.widgets[index].y =
-        Math.round(newY / this.gridSpacingY) * this.gridSpacingY;
+      console.log(saveCustomPage);
 
-      // 로컬 스토리지에 저장
-      localStorage.setItem('widgetPositions', JSON.stringify(this.widgets));
+      if (saveCustomPage) {
+        localStorage.setItem('customPageData', JSON.stringify(saveCustomPage));
 
-      this.isDragging = false;
-      this.dragIndex = null;
+        const pageData = JSON.parse(localStorage.getItem('customPageData'));
+        this.widgets = pageData.layoutData;
+      }
     },
   },
 };
@@ -120,10 +112,6 @@ export default {
 
 .widget {
   position: absolute;
-  width: 90px; /* 그리드 칸의 너비 */
-  height: 98.125px; /* 그리드 칸의 높이 */
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -10,15 +10,27 @@
 </template>
 
 <script>
-import Footer from "./components/Footer.vue";
-import Header from "./components/Header.vue";
-import ChatBot from "./components/ChatBot.vue";
+import Footer from './components/Footer.vue';
+import Header from './components/Header.vue';
+import ChatBot from './components/ChatBot.vue';
+import { login } from './api/userAPI';
 
 export default {
   components: {
     Footer,
     ChatBot,
     Header,
+  },
+  async mounted() {
+    try {
+      // API 호출
+      const data = await login();
+      localStorage.setItem('user', JSON.stringify(data));
+
+      console.log('API 호출 성공:', data);
+    } catch (error) {
+      console.error('API 호출 실패:', error);
+    }
   },
 };
 </script>

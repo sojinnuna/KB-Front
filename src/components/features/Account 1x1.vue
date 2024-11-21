@@ -44,10 +44,6 @@ export default {
   transition: all 0.3s ease;
 }
 
-.widget-container:hover {
-  transform: scale(1.05); /* 마우스 오버 시 확대 효과 */
-}
-
 .header {
   font-size: 12px;
   font-weight: bold;
